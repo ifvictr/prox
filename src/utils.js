@@ -1,5 +1,5 @@
-import Submission from './models/submission'
 import { SubmissionLayout } from './blocks'
+import Submission from './models/submission'
 
 export const createSubmission = async (bot, channel, text) => {
     const newSubmission = new Submission({ body: text })
