@@ -46,8 +46,8 @@ controller.on('message', async (bot, message) => {
     }
 
     // Update the ticket's status message
-    const updatedMessage = SubmissionLayout({ status, text: submission.body, id })
-    await bot.replyInteractive(message, updatedMessage)
+    const props = { id, status, text: submission.body }
+    await bot.replyInteractive(message, { blocks: SubmissionLayout(props) })
 
     // Delete the processed submission
     await Submission.deleteOne({ _id: id }).exec()

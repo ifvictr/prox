@@ -5,7 +5,7 @@ export const createSubmission = async (bot, channel, text) => {
     const newSubmission = new Submission({ body: text })
 
     // Create a ticket for the submission
-    const props = { status: 'waiting', text, id: newSubmission._id }
+    const props = { id: newSubmission._id, status: 'waiting', text }
     const reviewMessage = await sendMessage(bot, channel, { blocks: SubmissionLayout(props) })
     newSubmission.messageId = reviewMessage.id
 

@@ -1,4 +1,4 @@
-export const SubmissionLayout = ({ status, text, id }) => [
+export const SubmissionLayout = ({ id, status, text }) => [
     {
         type: 'section',
         text: {
@@ -41,5 +41,5 @@ export const SubmissionLayout = ({ status, text, id }) => [
                 }
             ]
         }]
-        : [{}]
+        : []
 ]
