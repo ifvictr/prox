@@ -51,7 +51,7 @@ controller.on('message', async (bot, message) => {
     const status = message.text
     if (status === 'approved') {
         const newCount = await count.increment()
-        await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}*: ${submission.body}`)
+        await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
     }
 
     // Update the ticket's status message
