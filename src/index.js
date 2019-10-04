@@ -2,6 +2,7 @@ import { Botkit } from 'botkit'
 import { SlackAdapter, SlackEventMiddleware, SlackMessageTypeMiddleware } from 'botbuilder-adapter-slack'
 import mongoose from 'mongoose'
 import { SubmissionLayout } from './blocks'
+import Counter from './counter'
 import Submission from './models/submission'
 import { createSubmission, sendMessage } from './utils'
 
@@ -20,7 +21,11 @@ adapter.use(new SlackEventMiddleware())
 adapter.use(new SlackMessageTypeMiddleware())
 
 const controller = new Botkit({ adapter })
-let count = 0 // TODO: Persist via storage
+const count = new Counter()
+
+controller.ready(async () => {
+    await count.init()
+})
 
 controller.hears('.*', 'direct_message', async (bot, message) => {
     await bot.say(':mag: Your message has been submitted for review')
@@ -45,11 +50,8 @@ controller.on('message', async (bot, message) => {
 
     const status = message.text
     if (status === 'approved') {
-        // TODO: Get the current count and add it
-        const currentCount = ++count
-        // TODO: Save the new count
-
-        await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${currentCount}*: ${submission.body}`)
+        const newCount = await count.increment()
+        await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}*: ${submission.body}`)
     }
 
     // Update the ticket's status message
