@@ -45,7 +45,7 @@ controller.on('message', async (bot, message) => {
         await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `${currentCount}. ${submission.body}`)
     }
 
-    // Update the tickets's status message
+    // Update the ticket's status message
     const updatedMessage = SubmissionLayout({ status, text: submission.body, id })
     await bot.replyInteractive(message, updatedMessage)
 
