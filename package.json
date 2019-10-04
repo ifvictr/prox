@@ -1,0 +1,28 @@
+{
+  "name": "prox",
+  "version": "1.0.0",
+  "repository": "https://github.com/ifvictr/prox",
+  "license": "MIT",
+  "author": "Victor Truong <me@ifvictr.com>",
+  "main": "./src/index.js",
+  "scripts": {
+    "build": "yarn clean && babel ./src --out-dir ./build --copy-files",
+    "clean": "rm -rf ./build && mkdir ./build",
+    "dev": "nodemon -r ./node_modules/dotenv/config --exec babel-node ./src/index.js",
+    "start": "yarn build && node ./build/index.js"
+  },
+  "dependencies": {
+    "botbuilder-adapter-slack": "^1.0.4",
+    "botkit": "^4.5.0",
+    "dotenv": "^8.1.0",
+    "mongoose": "^5.7.3",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/node": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "nodemon": "^1.19.3"
+  }
+}
