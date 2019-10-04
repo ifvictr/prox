@@ -36,6 +36,13 @@ controller.on('message', async (bot, message) => {
 
     const id = message.actions[0].block_id
     const submission = await Submission.findById(id).exec()
+    // Handle edge case where ticket isn't in database
+    if (!submission) {
+        await bot.startConversationInThread(message.channel, message.user, message.message.ts)
+        await bot.say(':rotating_light: Something went wrong. Reason: `submission not found`')
+        return
+    }
+
     const status = message.text
     if (status === 'approved') {
         // TODO: Get the current count and add it
