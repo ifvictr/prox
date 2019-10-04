@@ -49,7 +49,7 @@ controller.on('message', async (bot, message) => {
         const currentCount = ++count
         // TODO: Save the new count
 
-        await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `${currentCount}. ${submission.body}`)
+        await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${currentCount}*: ${submission.body}`)
     }
 
     // Update the ticket's status message
