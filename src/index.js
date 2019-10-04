@@ -23,7 +23,7 @@ const controller = new Botkit({ adapter })
 let count = 0 // TODO: Persist via storage
 
 controller.hears('.*', 'direct_message', async (bot, message) => {
-    await bot.replyInThread(message, ':clipboard: Your message has been submitted for review')
+    await bot.say(':mag: Your message has been submitted for review')
     await createSubmission(bot, process.env.SLACK_ADMIN_CHANNEL_ID, message.text)
 })
 
