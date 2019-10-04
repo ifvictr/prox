@@ -27,8 +27,8 @@ controller.hears('.*', 'direct_message', async (bot, message) => {
     await createSubmission(bot, process.env.SLACK_ADMIN_CHANNEL_ID, message.text)
 })
 
-// NOTE: The controller doesn't emit the `block_actions` event for some reason.
-// Instead, we'll catch the parent event and then look for it.
+// NOTE: The controller doesn't emit the `block_actions` event like it's supposed
+// to. So instead, we catch all messages and then look for it.
 controller.on('message', async (bot, message) => {
     if (message.incoming_message.channelData.type !== 'block_actions') {
         return
