@@ -15,7 +15,7 @@
     "botbuilder-adapter-slack": "^1.0.4",
     "botkit": "^4.5.0",
     "dotenv": "^8.1.0",
-    "mongoose": "^5.7.3"
+    "mongoose": "^5.7.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
