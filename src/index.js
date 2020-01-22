@@ -29,7 +29,7 @@ controller.ready(async () => {
 
 controller.hears('.*', 'direct_message', async (bot, message) => {
     await bot.say(':mag: Your message has been submitted for review')
-    await createSubmission(bot, process.env.SLACK_ADMIN_CHANNEL_ID, message.text)
+    await createSubmission(bot, process.env.SLACK_REVIEW_CHANNEL_ID, message.text)
 })
 
 // NOTE: The controller doesn't emit the `block_actions` event like it's supposed
