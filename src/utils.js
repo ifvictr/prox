@@ -1,13 +1,13 @@
 import { SubmissionLayout } from './blocks'
-import Submission from './models/submission'
+import Post from './models/post'
 
 export const createSubmission = async (bot, channel, text) => {
-    const newSubmission = new Submission({ body: text })
+    const newSubmission = new Post({ body: text })
 
     // Create a ticket for the submission
     const props = { id: newSubmission._id, status: 'waiting', text }
     const reviewMessage = await sendMessage(bot, channel, { blocks: SubmissionLayout(props) })
-    newSubmission.messageId = reviewMessage.id
+    newSubmission.reviewMessageId = reviewMessage.id
 
     await newSubmission.save()
     return reviewMessage

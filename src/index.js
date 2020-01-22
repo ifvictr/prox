@@ -3,7 +3,7 @@ import { SlackAdapter, SlackEventMiddleware, SlackMessageTypeMiddleware } from '
 import mongoose from 'mongoose'
 import { SubmissionLayout } from './blocks'
 import Counter from './counter'
-import Submission from './models/submission'
+import Post from './models/post'
 import { createSubmission, sendMessage } from './utils'
 
 // Set up MongoDB
@@ -40,7 +40,7 @@ controller.on('message', async (bot, message) => {
     }
 
     const id = message.actions[0].block_id
-    const submission = await Submission.findById(id).exec()
+    const submission = await Post.findById(id).exec()
     // Handle edge case where ticket isn't in database
     if (!submission) {
         await bot.startConversationInThread(message.channel, message.user, message.message.ts)
@@ -59,5 +59,5 @@ controller.on('message', async (bot, message) => {
     await bot.replyInteractive(message, { blocks: SubmissionLayout(props) })
 
     // Delete the processed submission
-    await Submission.deleteOne({ _id: id }).exec()
+    await Post.deleteOne({ _id: id }).exec()
 })
