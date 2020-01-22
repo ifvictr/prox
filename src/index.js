@@ -49,15 +49,18 @@ controller.on('message', async (bot, message) => {
     }
 
     const status = message.text
-    if (status === 'approved') {
-        const newCount = await count.increment()
-        await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
-    }
 
     // Update the ticket's status message
     const props = { id, status, text: submission.body }
     await bot.replyInteractive(message, { blocks: SubmissionLayout(props) })
 
-    // Delete the processed submission
-    await Post.deleteOne({ _id: id }).exec()
+    if (status === 'approved') {
+        const newCount = await count.increment()
+        const postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
+        submission.postMessageId = postMessage.id
+
+        await submission.save()
+    } else {
+        await Post.deleteOne({ _id: id }).exec()
+    }
 })
