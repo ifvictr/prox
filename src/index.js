@@ -58,6 +58,8 @@ controller.on('message', async (bot, message) => {
         const newCount = await count.increment()
         const postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
         submission.postMessageId = postMessage.id
+        submission.postNumber = newCount
+        submission.approvedAt = Date.now()
 
         await submission.save()
     } else {

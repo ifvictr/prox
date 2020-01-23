@@ -1,8 +1,14 @@
+import crypto from 'crypto'
 import { SubmissionLayout } from './blocks'
 import Post from './models/post'
 
 export const createSubmission = async (bot, channel, message) => {
-    const newSubmission = new Post({ body: message.text })
+    const salt = crypto.randomBytes(16).toString('hex')
+    const newSubmission = new Post({
+        body: message.text,
+        authorIdHash: hash(message.user, salt),
+        salt
+    })
 
     // Create a ticket for the submission
     const props = { id: newSubmission._id, status: 'waiting', text: message.text }
@@ -20,3 +26,7 @@ export const sendMessage = async (bot, channel, message) => {
     await bot.changeContext(originalContext)
     return sentMessage
 }
+
+export const hash = (value, salt) => crypto.createHash('sha256')
+    .update(value)
+    .update(salt).digest('hex').toString()
