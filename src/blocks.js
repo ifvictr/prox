@@ -14,7 +14,7 @@ export const SubmissionLayout = ({ id, status, text }) => [
         type: 'section',
         text: {
             type: 'mrkdwn',
-            text: `> ${text}`
+            text: `>>> ${text}`
         }
     },
     ...status === 'waiting'
