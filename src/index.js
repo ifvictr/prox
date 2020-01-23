@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import { SubmissionLayout } from './blocks'
 import Counter from './counter'
 import Post from './models/post'
-import { createSubmission, sendMessage } from './utils'
+import { createSubmission, hash, sendMessage } from './utils'
 
 // Set up MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -25,6 +25,37 @@ const count = new Counter()
 
 controller.ready(async () => {
     await count.init()
+})
+
+// Match replies
+const replyPattern = /^\d+:(\s|$)/
+controller.hears(replyPattern, 'direct_message', async (bot, message) => {
+    const args = message.text.split(' ')
+    const postNumber = args[0].slice(0, -1)
+    const body = args.slice(1).join(' ')
+
+    // Validate that there's content to send
+    if (!body) {
+        await bot.say(':confused: You need to enter a reply to send')
+        return
+    }
+
+    // Validate that the post exists
+    const post = await Post.findOne({ postNumber }).exec()
+    if (!post) {
+        await bot.say(`:confused: I couldn’t seem to find post *#${postNumber}*`)
+        return
+    }
+
+    await bot.say(`:ok_hand: Your reply to post *#${postNumber}* has been sent`)
+
+    const senderIdHash = hash(message.user, post.salt)
+    const displayName = senderIdHash === post.authorIdHash
+        ? 'OP'
+        : senderIdHash // TODO: Generate friendly display name from hash
+
+    await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, post.postMessageId)
+    await bot.say(`*${displayName} said:* ${body}`)
 })
 
 controller.hears('.*', 'direct_message', async (bot, message) => {
