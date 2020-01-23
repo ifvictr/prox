@@ -58,7 +58,9 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
     await bot.say(`*${displayName} said:* ${body}`)
 })
 
-controller.hears('.*', 'direct_message', async (bot, message) => {
+// Match non-command DMs
+const messagePattern = /^(?!\/).*/
+controller.hears(messagePattern, 'direct_message', async (bot, message) => {
     await bot.say(':mag: Your message has been submitted for review')
     await createSubmission(bot, process.env.SLACK_REVIEW_CHANNEL_ID, message)
 })
