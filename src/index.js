@@ -31,7 +31,7 @@ controller.ready(async () => {
 const replyPattern = /^\d+:(\s|$)/
 controller.hears(replyPattern, 'direct_message', async (bot, message) => {
     const args = message.text.split(/\s/)
-    const postNumber = args[0].slice(0, -1)
+    const postNumber = parseInt(args[0].slice(0, -1))
     const body = args.slice(1).join(' ')
 
     // Validate that there's content to send
