@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import { SubmissionLayout } from './blocks'
 import Counter from './counter'
 import Post from './models/post'
-import { createSubmission, hash, sendMessage } from './utils'
+import { createSubmission, hash, sendMessage, toPseudonym } from './utils'
 
 // Set up MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -49,13 +49,13 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
 
     await bot.say(`:ok_hand: Your reply to post *#${postNumber}* has been sent`)
 
+    // Send reply
     const senderIdHash = hash(message.user, post.salt)
     const displayName = senderIdHash === post.authorIdHash
-        ? 'OP'
-        : senderIdHash // TODO: Generate friendly display name from hash
-
+        ? ':small_blue_diamond: OP'
+        : toPseudonym(senderIdHash)
     await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, post.postMessageId)
-    await bot.say(`*${displayName} said:* ${body}`)
+    await bot.say(`_*${displayName} says:*_ ${body}`)
 })
 
 // Match non-command DMs
