@@ -29,7 +29,8 @@ const PostSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    approvedAt: Date
+    approvedAt: Date,
+    lockedDownAt: Date
 })
 
 export default mongoose.model('Post', PostSchema)
