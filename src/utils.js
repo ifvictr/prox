@@ -52,6 +52,12 @@ export const hash = (value, salt) => crypto.createHash('sha256')
     .update(value)
     .update(salt).digest('hex').toString()
 
+export const isUserInChannel = async (api, user, channel) => {
+    // TODO: Handle pagination
+    const res = await api.conversations.members({ channel })
+    return res.members.includes(user)
+}
+
 export const toPseudonym = hash => {
     const adjective = adjectives[parseInt(hash.slice(0, 32), 16) % adjectives.length]
     const animal = animals[parseInt(hash.slice(32, hash.length), 16) % animals.length]

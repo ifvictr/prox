@@ -1,7 +1,14 @@
 import Post from '../models/post'
+import { isUserInChannel } from '../utils'
 
 // /prox lockdown <post number>
 export default async (bot, message, args) => {
+    // Check if the user is part of the review channel
+    if (!(await isUserInChannel(bot.api, message.user, process.env.SLACK_REVIEW_CHANNEL_ID))) {
+        await bot.replyEphemeral(message, 'You don’t have permission to run this command')
+        return
+    }
+
     if (!args[1]) {
         await bot.replyEphemeral(message, 'Please specify a post number')
         return

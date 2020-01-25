@@ -1,12 +1,6 @@
 import isUrl from 'is-url'
 import Post from '../models/post'
-import { getIdFromUrl } from '../utils'
-
-const isUserInChannel = async (api, user, channel) => {
-    // TODO: Handle pagination
-    const res = await api.conversations.members({ channel })
-    return res.members.includes(user)
-}
+import { getIdFromUrl, isUserInChannel } from '../utils'
 
 // /prox delete <post number|url>
 export default async (bot, message, args) => {
