@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { URL } from 'url'
 import { SubmissionLayout } from './blocks'
 import Post from './models/post'
 import adjectives from './words/adjectives.json'
@@ -30,6 +31,22 @@ export const sendMessage = async (bot, channel, message) => {
 }
 
 export const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
+
+export const getIdFromUrl = inputUrl => {
+    const url = new URL(inputUrl)
+    const lastSegment = url.pathname.slice(url.pathname.lastIndexOf('/') + 1)
+
+    // Attempt to find ID in the URL. Format: pXXXXXXXXXXXXXXXX
+    if (!lastSegment.startsWith('p') && lastSegment.length !== 17) {
+        return null
+    }
+
+    const id = lastSegment.slice(1) // XXXXXXXXXXXXXXXX
+    const insertPos = id.length - 6
+    // NOTE: Slack's web API is picky about the period. Now formatted as XXXXXXXXXX.XXXXXX
+    const formattedId = id.slice(0, insertPos) + '.' + id.slice(insertPos)
+    return formattedId
+}
 
 export const hash = (value, salt) => crypto.createHash('sha256')
     .update(value)
