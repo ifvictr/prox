@@ -1,22 +1,6 @@
 import isUrl from 'is-url'
-import { URL } from 'url'
 import Post from '../models/post'
-
-const getIdFromUrl = inputUrl => {
-    const url = new URL(inputUrl)
-    const lastSegment = url.pathname.slice(url.pathname.lastIndexOf('/') + 1)
-
-    // Attempt to find ID in the URL. Format: pXXXXXXXXXXXXXXXX
-    if (!lastSegment.startsWith('p') && lastSegment.length !== 17) {
-        return null
-    }
-
-    const id = lastSegment.slice(1) // XXXXXXXXXXXXXXXX
-    const insertPos = id.length - 6
-    // NOTE: Slack's web API is picky about the period. Now formatted as XXXXXXXXXX.XXXXXX
-    const formattedId = id.slice(0, insertPos) + '.' + id.slice(insertPos)
-    return formattedId
-}
+import { getIdFromUrl } from '../utils'
 
 const isUserInChannel = async (api, user, channel) => {
     // TODO: Handle pagination
