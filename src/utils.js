@@ -1,9 +1,9 @@
 import crypto from 'crypto'
 import { URL } from 'url'
 import { SubmissionLayout } from './blocks'
+import adjectives from './data/adjectives.json'
+import animals from './data/animals.json'
 import Post from './models/post'
-import adjectives from './words/adjectives.json'
-import animals from './words/animals.json'
 
 export const createSubmission = async (bot, channel, message) => {
     const salt = crypto.randomBytes(16).toString('hex')
