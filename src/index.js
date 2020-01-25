@@ -2,6 +2,7 @@ import { Botkit } from 'botkit'
 import { SlackAdapter, SlackEventMiddleware, SlackMessageTypeMiddleware } from 'botbuilder-adapter-slack'
 import mongoose from 'mongoose'
 import { SubmissionLayout } from './blocks'
+import deleteCommand from './commands/delete'
 import Counter from './counter'
 import Post from './models/post'
 import { createSubmission, hash, sendMessage, toPseudonym } from './utils'
@@ -98,4 +99,20 @@ controller.on('message', async (bot, message) => {
     } else {
         await Post.deleteOne({ _id: id }).exec()
     }
+})
+
+const commands = new Map([
+    ['delete', deleteCommand]
+])
+controller.on('slash_command', async (bot, message) => {
+    const args = message.text.split(' ')
+    const subcommand = args[0].toLowerCase()
+    if (!commands.has(subcommand)) {
+        await bot.replyEphemeral(message, 'Command not found')
+        return
+    }
+
+    // Pass control to appropriate handler
+    const commandHandler = commands.get(subcommand)
+    await commandHandler(bot, message, args)
 })
