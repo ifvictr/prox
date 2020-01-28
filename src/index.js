@@ -38,24 +38,24 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
 
     // Validate that there's content to send
     if (!body) {
-        await bot.say(':confused: You need to enter a reply to send')
+        await bot.say(':confused: You need to enter a reply to send.')
         return
     }
 
     // Validate that the post exists
     const post = await Post.findOne({ postNumber }).exec()
     if (!post) {
-        await bot.say(`:confused: I couldn’t seem to find post *#${postNumber}*`)
+        await bot.say(`:confused: Couldn’t seem to find post *#${postNumber}*.`)
         return
     }
 
     // Stop if the post is locked down
     if (post.lockedDownAt) {
-        await bot.say(`:lock: This post is currently on lockdown. Your reply will not be posted.`)
+        await bot.say(`:lock: This post is currently on lockdown. Your reply will not be sent.`)
         return
     }
 
-    await bot.say(`:ok_hand: Your reply to post *#${postNumber}* has been sent`)
+    await bot.say(`:ok_hand: Your reply to post *#${postNumber}* has been sent.`)
 
     // Send reply
     const senderIdHash = hash(message.user, post.salt)
@@ -69,7 +69,7 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
 // Match non-command DMs
 const messagePattern = /^(?!\/).*/
 controller.hears(messagePattern, 'direct_message', async (bot, message) => {
-    await bot.say(':mag: Your message has been submitted for review')
+    await bot.say(':mag: Your message has been submitted for review.')
     await createSubmission(bot, process.env.SLACK_REVIEW_CHANNEL_ID, message)
 })
 
@@ -116,7 +116,7 @@ controller.on('slash_command', async (bot, message) => {
     const args = message.text.split(' ')
     const subcommand = args[0].toLowerCase()
     if (!commands.has(subcommand)) {
-        await bot.replyEphemeral(message, 'Command not found')
+        await bot.replyEphemeral(message, 'Command not found.')
         return
     }
 

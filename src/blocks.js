@@ -5,9 +5,9 @@ export const SubmissionLayout = ({ id, status, text }) => [
             type: 'mrkdwn',
             text: ({
                 waiting: ':bell: You have a new submission to review!',
-                approved: ':+1: You approved this message',
-                rejected: ':-1: You rejected this message'
-            })[status] || ':rotating_light: Something went wrong',
+                approved: ':+1: You’ve approved this message.',
+                rejected: ':-1: You’ve rejected this message.'
+            })[status] || ':rotating_light: Something went wrong.',
         }
     },
     {

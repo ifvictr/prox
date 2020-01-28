@@ -6,12 +6,12 @@ import { getIdFromUrl, isUserInChannel } from '../utils'
 export default async (bot, message, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(bot.api, message.user, process.env.SLACK_REVIEW_CHANNEL_ID))) {
-        await bot.replyEphemeral(message, 'You don’t have permission to run this command')
+        await bot.replyEphemeral(message, 'You don’t have permission to run this command.')
         return
     }
 
     if (!args[1]) {
-        await bot.replyEphemeral(message, 'Please specify a post number or message URL')
+        await bot.replyEphemeral(message, 'Please specify a post number or message URL.')
         return
     }
 
@@ -20,18 +20,18 @@ export default async (bot, message, args) => {
     if (isUrl(args[1])) { // Is URL?
         messageId = getIdFromUrl(args[1])
         if (!messageId) {
-            await bot.replyEphemeral(message, 'Couldn’t extract a message ID from the given URL')
+            await bot.replyEphemeral(message, 'Couldn’t extract a message ID from the given URL.')
             return
         }
     } else if (!isNaN(args[1])) { // Is post number?
         const post = await Post.findOne({ postNumber: args[1] })
         if (!post) {
-            await bot.replyEphemeral(message, 'The specified post couldn’t be found')
+            await bot.replyEphemeral(message, 'The specified post couldn’t be found.')
             return
         }
         messageId = post.postMessageId
     } else { // Is invalid input
-        await bot.replyEphemeral(message, 'Input must be a post number or message URL')
+        await bot.replyEphemeral(message, 'Input must be a post number or message URL.')
         return
     }
 
@@ -41,7 +41,7 @@ export default async (bot, message, args) => {
             id: messageId,
             conversation: { id: process.env.SLACK_POST_CHANNEL_ID },
         })
-        await bot.replyEphemeral(message, 'Message deleted')
+        await bot.replyEphemeral(message, 'Message deleted.')
     } catch (e) {
         await bot.replyEphemeral(message, `Failed to delete. Reason: \`${e.data.error}\``)
     }

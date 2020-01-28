@@ -5,30 +5,30 @@ import { isUserInChannel } from '../utils'
 export default async (bot, message, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(bot.api, message.user, process.env.SLACK_REVIEW_CHANNEL_ID))) {
-        await bot.replyEphemeral(message, 'You don’t have permission to run this command')
+        await bot.replyEphemeral(message, 'You don’t have permission to run this command.')
         return
     }
 
     if (!args[1]) {
-        await bot.replyEphemeral(message, 'Please specify a post number')
+        await bot.replyEphemeral(message, 'Please specify a post number.')
         return
     }
 
     if (isNaN(args[1])) {
-        await bot.replyEphemeral(message, 'Input must be a post number')
+        await bot.replyEphemeral(message, 'Input must be a post number.')
         return
     }
 
     const post = await Post.findOne({ postNumber: args[1] })
     if (!post) {
-        await bot.replyEphemeral(message, 'The specified post couldn’t be found')
+        await bot.replyEphemeral(message, 'The specified post couldn’t be found.')
         return
     }
 
     post.lockedDownAt = post.lockedDownAt ? null : Date.now() // Toggle the post's lockdown status
     await post.save()
 
-    await bot.replyEphemeral(message, 'Lockdown status updated')
+    await bot.replyEphemeral(message, 'Lockdown status updated.')
 
     // Update the post message with the new lock status
     const updatedMessage = {
