@@ -2,9 +2,20 @@
   "name": "prox",
   "version": "1.1.0",
   "private": true,
-  "repository": "https://github.com/ifvictr/prox",
+  "homepage": "https://github.com/ifvictr/prox#readme",
+  "bugs": {
+    "url": "https://github.com/ifvictr/prox/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ifvictr/prox.git"
+  },
   "license": "MIT",
-  "author": "Victor Truong <me@ifvictr.com>",
+  "author": {
+    "name": "Victor Truong",
+    "email": "victor@victortruong.com",
+    "url": "https://victortruong.com"
+  },
   "main": "./src/index.js",
   "scripts": {
     "build": "yarn clean && babel ./src --out-dir ./build --copy-files",
