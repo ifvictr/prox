@@ -73,13 +73,7 @@ controller.hears(messagePattern, 'direct_message', async (bot, message) => {
     await createSubmission(bot, process.env.SLACK_REVIEW_CHANNEL_ID, message)
 })
 
-// NOTE: The controller doesn't emit the `block_actions` event like it's supposed
-// to. So instead, we catch all messages and then look for it.
-controller.on('message', async (bot, message) => {
-    if (message.incoming_message.channelData.type !== 'block_actions') {
-        return
-    }
-
+controller.on('block_actions', async (bot, message) => {
     const id = message.actions[0].block_id
     const submission = await Post.findById(id).exec()
     // Handle edge case where ticket isn't in database
