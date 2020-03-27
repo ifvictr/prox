@@ -24,17 +24,17 @@
     "start": "yarn build && node ./build/index.js"
   },
   "dependencies": {
-    "botbuilder-adapter-slack": "^1.0.4",
-    "botkit": "^4.5.0",
-    "dotenv": "^8.1.0",
+    "botbuilder-adapter-slack": "^1.0.10",
+    "botkit": "^4.8.1",
+    "dotenv": "^8.2.0",
     "is-url": "^1.2.4",
-    "mongoose": "^5.7.5"
+    "mongoose": "^5.9.6"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.2",
-    "@babel/core": "^7.6.2",
-    "@babel/node": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
-    "nodemon": "^1.19.3"
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "nodemon": "^2.0.2"
   }
 }
