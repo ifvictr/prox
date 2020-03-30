@@ -7,7 +7,7 @@ export const SubmissionLayout = ({ id, postChannel, postNumber, status, text, us
                 type: 'mrkdwn',
                 text: ({
                     waiting: ':bell: You have a new submission to review!',
-                    approved: `:+1: ${displayName} approved this submission. It’s *#${postNumber}* in <#${postChannel}>.`,
+                    approved: `:+1: ${displayName} approved this submission. It’s now *#${postNumber}* in <#${postChannel}>.`,
                     rejected: `:-1: ${displayName} rejected this submission.`
                 })[status] || ':rotating_light: Something went wrong.',
             }
