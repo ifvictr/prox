@@ -85,10 +85,6 @@ controller.on('block_actions', async (bot, message) => {
 
     const status = message.text
 
-    // Update the ticket's status message
-    const props = { id, status, text: submission.body, user: message.user }
-    await bot.replyInteractive(message, { blocks: SubmissionLayout(props) })
-
     if (status === 'approved') {
         const newCount = await count.increment()
         const postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
@@ -100,6 +96,17 @@ controller.on('block_actions', async (bot, message) => {
     } else {
         await Post.deleteOne({ _id: id }).exec()
     }
+
+    // Update the ticket's status message
+    const props = {
+        id,
+        postChannel: process.env.SLACK_POST_CHANNEL_ID,
+        postNumber: submission.postNumber,
+        status,
+        text: submission.body,
+        user: message.user
+    }
+    await bot.replyInteractive(message, { blocks: SubmissionLayout(props) })
 })
 
 const commands = new Map([

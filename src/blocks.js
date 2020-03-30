@@ -1,4 +1,4 @@
-export const SubmissionLayout = ({ id, status, text, user }) => {
+export const SubmissionLayout = ({ id, postChannel, postNumber, status, text, user }) => {
     const displayName = `<@${user}>` || 'You’ve'
     return [
         {
@@ -7,8 +7,8 @@ export const SubmissionLayout = ({ id, status, text, user }) => {
                 type: 'mrkdwn',
                 text: ({
                     waiting: ':bell: You have a new submission to review!',
-                    approved: `:+1: ${displayName} approved this message.`,
-                    rejected: `:-1: ${displayName} rejected this message.`
+                    approved: `:+1: ${displayName} approved this submission. It’s *#${postNumber}* in <#${postChannel}>.`,
+                    rejected: `:-1: ${displayName} rejected this submission.`
                 })[status] || ':rotating_light: Something went wrong.',
             }
         },
