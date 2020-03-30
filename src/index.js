@@ -9,7 +9,7 @@ import Post from './models/post'
 import { createSubmission, hash, sendMessage, toPseudonym } from './utils'
 
 // Set up MongoDB
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true })
 
 // Set up Slack adapter
 const adapter = new SlackAdapter({
