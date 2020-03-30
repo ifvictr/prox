@@ -23,14 +23,10 @@ const PostSchema = new mongoose.Schema({
     },
     postMessageId: String,
     postNumber: Number,
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        required: true,
-        immutable: true
-    },
     approvedAt: Date,
     lockedDownAt: Date
+}, {
+    timestamps: true
 })
 
 export default mongoose.model('Post', PostSchema)
