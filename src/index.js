@@ -86,7 +86,7 @@ controller.on('block_actions', async (bot, message) => {
     const status = message.text
 
     // Update the ticket's status message
-    const props = { id, status, text: submission.body }
+    const props = { id, status, text: submission.body, user: message.user }
     await bot.replyInteractive(message, { blocks: SubmissionLayout(props) })
 
     if (status === 'approved') {
