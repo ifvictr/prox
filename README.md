@@ -1,4 +1,6 @@
-# prox
+# Prox 🙈
+
+Share anonymous confessions on Slack.
 
 ## License
 
