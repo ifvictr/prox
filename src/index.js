@@ -59,11 +59,13 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
 
     // Send reply
     const senderIdHash = hash(message.user, post.salt)
-    const displayName = senderIdHash === post.authorIdHash
-        ? ':small_blue_diamond: OP'
-        : toPseudonym(senderIdHash)
-    await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, post.postMessageId)
-    await bot.say(`_*${displayName} says:*_ ${body}`)
+    const displayName = toPseudonym(senderIdHash) + (senderIdHash === post.authorIdHash ? ' (OP)' : '')
+    await bot.api.chat.postMessage({
+        channel: process.env.SLACK_POST_CHANNEL_ID,
+        text: body,
+        thread_ts: post.postMessageId,
+        username: displayName
+    })
 })
 
 // Match non-command DMs
