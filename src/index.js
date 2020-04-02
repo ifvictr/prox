@@ -76,7 +76,7 @@ controller.hears(messagePattern, 'direct_message', async (bot, message) => {
 })
 
 controller.on('block_actions', async (bot, message) => {
-    const id = message.actions[0].block_id
+    const id = message.text
     const submission = await Post.findById(id).exec()
     // Handle edge case where ticket isn't in database
     if (!submission) {
@@ -85,21 +85,27 @@ controller.on('block_actions', async (bot, message) => {
         return
     }
 
-    const status = message.text
+    const action = message.actions[0].action_id
+    switch (action) {
+        case 'post_approve':
+            const newCount = await count.increment()
+            const postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
+            submission.postMessageId = postMessage.id
+            submission.postNumber = newCount
+            submission.approvedAt = Date.now()
 
-    if (status === 'approved') {
-        const newCount = await count.increment()
-        const postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
-        submission.postMessageId = postMessage.id
-        submission.postNumber = newCount
-        submission.approvedAt = Date.now()
-
-        await submission.save()
-    } else {
-        await Post.deleteOne({ _id: id }).exec()
+            await submission.save()
+            break
+        case 'post_reject':
+            await Post.deleteOne({ _id: id }).exec()
+            break
     }
 
     // Update the ticket's status message
+    const status = ({
+        post_approve: 'approved',
+        post_reject: 'rejected'
+    })[action] || 'unknown'
     const props = {
         id,
         postChannel: process.env.SLACK_POST_CHANNEL_ID,

@@ -22,24 +22,25 @@ export const SubmissionLayout = ({ id, postChannel, postNumber, status, text, us
         ...status === 'waiting'
             ? [{
                 type: 'actions',
-                block_id: id,
                 elements: [
                     {
                         type: 'button',
+                        action_id: 'post_approve',
                         style: 'primary',
                         text: {
                             type: 'plain_text',
                             text: 'Approve'
                         },
-                        value: 'approved'
+                        value: id
                     },
                     {
                         type: 'button',
+                        action_id: 'post_reject',
                         text: {
                             type: 'plain_text',
                             text: 'Reject'
                         },
-                        value: 'rejected'
+                        value: id
                     }
                 ]
             }]
