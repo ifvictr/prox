@@ -24,7 +24,8 @@ const PostSchema = new mongoose.Schema({
     postMessageId: String,
     postNumber: Number,
     approvedAt: Date,
-    lockedDownAt: Date
+    lockedDownAt: Date,
+    markedSensitiveAt: Date
 }, {
     timestamps: true
 })
