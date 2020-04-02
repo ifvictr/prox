@@ -1,4 +1,4 @@
-export const SubmissionLayout = ({ id, postChannel, postNumber, status, text, user }) => {
+export const SubmissionLayout = ({ id, isSensitive, postChannel, postNumber, status, text, user }) => {
     const displayName = `<@${user}>` || 'You’ve'
     return [
         {
@@ -39,6 +39,15 @@ export const SubmissionLayout = ({ id, postChannel, postNumber, status, text, us
                         text: {
                             type: 'plain_text',
                             text: 'Reject'
+                        },
+                        value: id
+                    },
+                    {
+                        type: 'button',
+                        action_id: 'post_toggle_sensitive',
+                        text: {
+                            type: 'plain_text',
+                            text: `${isSensitive ? 'Unmark' : 'Mark'} as sensitive`
                         },
                         value: id
                     }

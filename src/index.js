@@ -89,7 +89,18 @@ controller.on('block_actions', async (bot, message) => {
     switch (action) {
         case 'post_approve':
             const newCount = await count.increment()
-            const postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID, `*#${newCount}:* ${submission.body}`)
+            let postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID,
+                submission.markedSensitiveAt
+                    ? `:warning: *#${newCount}:* _This post contains potentially sensitive content. Click on “View thread” to view it._`
+                    : `*#${newCount}:* ${submission.body}`)
+
+            // If the post is marked sensitive, post in the thread and save that message ID instead.
+            // We can always retrieve the parent message's ID if we need it in the future.
+            if (submission.markedSensitiveAt) {
+                await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, message.user, postMessage.id)
+                postMessage = await bot.say(submission.body)
+            }
+
             submission.postMessageId = postMessage.id
             submission.postNumber = newCount
             submission.approvedAt = Date.now()
@@ -99,15 +110,20 @@ controller.on('block_actions', async (bot, message) => {
         case 'post_reject':
             await Post.deleteOne({ _id: id }).exec()
             break
+        case 'post_toggle_sensitive':
+            submission.markedSensitiveAt = submission.markedSensitiveAt ? null : Date.now()
+            await submission.save()
+            break
     }
 
     // Update the ticket's status message
     const status = ({
         post_approve: 'approved',
         post_reject: 'rejected'
-    })[action] || 'unknown'
+    })[action] || 'waiting'
     const props = {
         id,
+        isSensitive: Boolean(submission.markedSensitiveAt),
         postChannel: process.env.SLACK_POST_CHANNEL_ID,
         postNumber: submission.postNumber,
         status,
