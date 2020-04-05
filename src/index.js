@@ -1,5 +1,5 @@
-import { Botkit } from 'botkit'
 import { SlackAdapter, SlackEventMiddleware, SlackMessageTypeMiddleware } from 'botbuilder-adapter-slack'
+import { Botkit } from 'botkit'
 import mongoose from 'mongoose'
 import { SubmissionLayout } from './blocks'
 import deleteCommand from './commands/delete'
