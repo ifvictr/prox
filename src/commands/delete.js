@@ -2,7 +2,7 @@ import isUrl from 'is-url'
 import Post from '../models/post'
 import { getIdFromUrl, isUserInChannel } from '../utils'
 
-// /prox delete <post number|url>
+// /prox delete <post number|url> [hard]
 export default async (bot, message, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(bot.api, message.user, process.env.SLACK_REVIEW_CHANNEL_ID))) {
@@ -47,7 +47,13 @@ export default async (bot, message, args) => {
             conversation: { id: process.env.SLACK_POST_CHANNEL_ID },
             text: `:skull: ${post ? `*#${post.postNumber}:* _This post` : '_This message'} has been deleted._`
         }
-        await bot.updateMessage(updatedMessage)
+
+        // Delete depending on sender's specified method. Defaults to soft
+        if (args[2] === 'hard') {
+            await bot.deleteMessage(updatedMessage)
+        } else {
+            await bot.updateMessage(updatedMessage)
+        }
         await bot.replyEphemeral(message, 'Message deleted.')
     } catch (e) {
         await bot.replyEphemeral(message, `Failed to delete. Reason: \`${e.data.error}\``)
