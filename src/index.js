@@ -89,16 +89,17 @@ controller.on('block_actions', async (bot, message) => {
     switch (action) {
         case 'post_approve':
             const newCount = await count.increment()
+            const mainContent = `*#${newCount}:* ${submission.body}`
             let postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID,
                 submission.markedSensitiveAt
                     ? `:warning: *#${newCount}:* _This post contains potentially sensitive content. Click on “View thread” to view it._`
-                    : `*#${newCount}:* ${submission.body}`)
+                    : mainContent)
 
             // If the post is marked sensitive, post in the thread and save that message ID instead.
             // We can always retrieve the parent message's ID if we need it in the future.
             if (submission.markedSensitiveAt) {
                 await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, message.user, postMessage.id)
-                postMessage = await bot.say(submission.body)
+                postMessage = await bot.say(mainContent)
             }
 
             submission.postMessageId = postMessage.id

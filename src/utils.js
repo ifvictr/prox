@@ -48,6 +48,21 @@ export const getIdFromUrl = inputUrl => {
     return formattedId
 }
 
+export const getParentMessageId = async (api, channel, ts) => {
+    const { messages } = await api.conversations.replies({
+        channel,
+        ts,
+        latest: ts,
+        limit: 1
+    })
+
+    if (messages.length === 0) {
+        return null
+    }
+
+    return messages[0].thread_ts
+}
+
 export const hash = (value, salt) => crypto.createHash('sha256')
     .update(value)
     .update(salt).digest('hex').toString()
