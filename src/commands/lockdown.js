@@ -1,5 +1,5 @@
 import Post from '../models/post'
-import { isUserInChannel } from '../utils'
+import { getParentMessageId, isUserInChannel } from '../utils'
 
 // /prox lockdown <post number>
 export default async (bot, message, args) => {
@@ -28,8 +28,6 @@ export default async (bot, message, args) => {
     post.lockedDownAt = post.lockedDownAt ? null : Date.now() // Toggle the post's lockdown status
     await post.save()
 
-    await bot.replyEphemeral(message, 'Lockdown status updated.')
-
     // Update the post message with the new lock status
     const updatedMessage = {
         id: post.postMessageId,
@@ -39,8 +37,14 @@ export default async (bot, message, args) => {
     await bot.updateMessage(updatedMessage)
 
     // Post status update in post thread
-    await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, post.postMessageId)
+    const parentId = await getParentMessageId(bot.api, process.env.SLACK_POST_CHANNEL_ID, post.postMessageId)
+
+    await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, parentId)
     await bot.say(post.lockedDownAt
         ? ':lock: _This post is now on lockdown. Anonymous replies sent after this will not be shown._'
         : ':unlock: _This post is no longer on lockdown. Anonymous replies sent will be shown again._')
+
+    // Notify the command sender
+    await bot.changeContext(message.reference)
+    await bot.replyEphemeral(message, 'Lockdown status updated.')
 }
