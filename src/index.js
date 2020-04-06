@@ -109,7 +109,7 @@ controller.on('block_actions', async (bot, message) => {
             await submission.save()
             break
         case 'post_reject':
-            await Post.deleteOne({ _id: id }).exec()
+            await submission.delete()
             break
         case 'post_toggle_sensitive':
             submission.markedSensitiveAt = submission.markedSensitiveAt ? null : Date.now()
