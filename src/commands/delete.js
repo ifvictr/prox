@@ -54,6 +54,10 @@ export default async (bot, message, args) => {
         } else {
             await bot.updateMessage(updatedMessage)
         }
+
+        // Delete from database also
+        await post.delete()
+
         await bot.replyEphemeral(message, 'Message deleted.')
     } catch (e) {
         await bot.replyEphemeral(message, `Failed to delete. Reason: \`${e.data.error}\``)
