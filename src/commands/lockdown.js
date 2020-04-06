@@ -28,8 +28,6 @@ export default async (bot, message, args) => {
     post.lockedDownAt = post.lockedDownAt ? null : Date.now() // Toggle the post's lockdown status
     await post.save()
 
-    await bot.replyEphemeral(message, 'Lockdown status updated.')
-
     // Update the post message with the new lock status
     const updatedMessage = {
         id: post.postMessageId,
@@ -45,4 +43,8 @@ export default async (bot, message, args) => {
     await bot.say(post.lockedDownAt
         ? ':lock: _This post is now on lockdown. Anonymous replies sent after this will not be shown._'
         : ':unlock: _This post is no longer on lockdown. Anonymous replies sent will be shown again._')
+
+    // Notify the command sender
+    await bot.changeContext(message.reference)
+    await bot.replyEphemeral(message, 'Lockdown status updated.')
 }
