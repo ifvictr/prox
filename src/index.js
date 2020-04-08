@@ -66,6 +66,8 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
         thread_ts: post.postMessageId,
         username: displayName
     })
+
+    await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to *#${postNumber}*:_\n>>> ${body}`)
 })
 
 // Match non-command DMs
