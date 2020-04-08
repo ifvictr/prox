@@ -63,6 +63,14 @@ export const getParentMessageId = async (api, channel, ts) => {
     return messages[0].thread_ts
 }
 
+export const getPreview = (length, text) => {
+    if (text.length <= length) {
+        return text
+    }
+
+    return text.substring(0, length) + '…'
+}
+
 export const hash = (value, salt) => crypto.createHash('sha256')
     .update(value)
     .update(salt).digest('hex').toString()

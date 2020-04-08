@@ -6,7 +6,7 @@ import deleteCommand from './commands/delete'
 import lockdownCommand from './commands/lockdown'
 import Counter from './counter'
 import Post from './models/post'
-import { createSubmission, hash, sendMessage, toPseudonym } from './utils'
+import { createSubmission, getPreview, hash, sendMessage, toPseudonym } from './utils'
 
 // Set up MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true })
@@ -137,7 +137,7 @@ controller.on('block_actions', async (bot, message) => {
 
     // Only log submission approval/rejection
     if (status !== 'waiting') {
-        await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${status} a submission:_\n>>> ${submission.body}`)
+        await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${status} a submission:_\n>>> ${getPreview(50, submission.body)}`)
     }
 })
 

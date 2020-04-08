@@ -1,6 +1,6 @@
 import isUrl from 'is-url'
 import Post from '../models/post'
-import { getIdFromUrl, isUserInChannel, sendMessage } from '../utils'
+import { getIdFromUrl, getPreview, isUserInChannel, sendMessage } from '../utils'
 
 // /prox delete <post number|url> [hard]
 export default async (bot, message, args) => {
@@ -62,7 +62,7 @@ export default async (bot, message, args) => {
 
         // Log deletion if it was a post
         if (post) {
-            await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> deleted *#${post.postNumber}*:_\n>>> ${post.body}`)
+            await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> deleted *#${post.postNumber}*:_\n>>> ${getPreview(50, post.body)}`)
         }
     } catch (e) {
         await bot.replyEphemeral(message, `Failed to delete. Reason: \`${e.data.error}\``)
