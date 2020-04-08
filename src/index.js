@@ -134,6 +134,11 @@ controller.on('block_actions', async (bot, message) => {
         user: message.user
     }
     await bot.replyInteractive(message, { blocks: SubmissionLayout(props) })
+
+    // Only log submission approval/rejection
+    if (status !== 'waiting') {
+        await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${status} a submission:_\n>>> ${submission.body}`)
+    }
 })
 
 const commands = new Map([
