@@ -73,7 +73,7 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
 // Match non-command DMs
 const messagePattern = /^(?!\/).*/
 controller.hears(messagePattern, 'direct_message', async (bot, message) => {
-    await bot.say(':mag: Your submission is now under review.')
+    await bot.say(':mag: Your submission is now under review. If you were trying to send an anonymous reply, resend it in the following format: `<post number>: <your message here>` (i.e., sending `1337: hello` would send “hello” to post *#1337*).')
     await createSubmission(bot, process.env.SLACK_REVIEW_CHANNEL_ID, message)
 })
 
