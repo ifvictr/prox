@@ -36,8 +36,9 @@ export default async (bot, message, args) => {
     }
     await bot.updateMessage(updatedMessage)
 
-    // Post status update in post thread
-    const parentId = await getParentMessageId(bot.api, process.env.SLACK_POST_CHANNEL_ID, post.postMessageId)
+    // Post status update in post thread. Attempt to get the parent message's ID.
+    // If it's null, then this must already be the top-level message.
+    const parentId = await getParentMessageId(bot.api, process.env.SLACK_POST_CHANNEL_ID, post.postMessageId) || post.postMessageId
 
     await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, parentId)
     await bot.say(post.lockedDownAt
