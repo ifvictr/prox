@@ -29,7 +29,7 @@ controller.ready(async () => {
     await count.init()
 })
 
-// Match replies
+// Match anonymous replies sent via DMs
 const replyPattern = /^\d+:(\s|$)/
 controller.hears(replyPattern, 'direct_message', async (bot, message) => {
     const args = message.text.split(/\s/)
@@ -68,6 +68,22 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
     })
 
     await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to *#${postNumber}*:_\n>>> ${body}`)
+})
+
+// Match non-anonymous replies to Prox's posts in the post channel
+controller.hears('.*', 'message', async (bot, message) => {
+    // Only listen to messages in threads
+    if (message.channel !== process.env.SLACK_POST_CHANNEL_ID || !message.thread_ts) {
+        return
+    }
+
+    // Check the thread ID to see if it belongs to a post by Prox
+    const post = await Post.findOne({ postMessageId: message.thread_ts })
+    if (!post) {
+        return
+    }
+
+    await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> sent a reply to *#${post.postNumber}*:_\n>>> ${message.text}`)
 })
 
 // Match non-command DMs
