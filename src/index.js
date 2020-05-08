@@ -6,7 +6,7 @@ import deleteCommand from './commands/delete'
 import lockdownCommand from './commands/lockdown'
 import Counter from './counter'
 import Post from './models/post'
-import { createSubmission, getPreview, hash, sendMessage, toPseudonym } from './utils'
+import { createSubmission, getIcon, getPreview, hash, sendMessage, toPrettyPseudonym } from './utils'
 
 // Set up MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true })
@@ -66,12 +66,14 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
 
     // Send reply
     const senderIdHash = hash(message.user, post.salt)
-    const displayName = toPseudonym(senderIdHash) + (senderIdHash === post.authorIdHash ? ' (OP)' : '')
+    const displayName = toPrettyPseudonym(senderIdHash) + (senderIdHash === post.authorIdHash ? ' (OP)' : '')
+    const icon = getIcon(senderIdHash)
     await bot.api.chat.postMessage({
         channel: process.env.SLACK_POST_CHANNEL_ID,
         text: body,
         thread_ts: post.postMessageId,
-        username: displayName
+        username: displayName,
+        icon_emoji: icon ? `:${icon}:` : null,
     })
 
     await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to *#${postNumber}*:_\n>>> ${body}`)

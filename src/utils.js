@@ -3,6 +3,7 @@ import { URL } from 'url'
 import { SubmissionLayout } from './blocks'
 import adjectives from './data/adjectives.json'
 import animals from './data/animals.json'
+import icons from './data/icons.json'
 import Post from './models/post'
 
 export const createSubmission = async (bot, channel, message) => {
@@ -81,9 +82,17 @@ export const isUserInChannel = async (api, user, channel) => {
     return res.members.includes(user)
 }
 
-export const toPseudonym = hash => {
-    const adjective = adjectives[parseInt(hash.slice(0, 32), 16) % adjectives.length]
-    const animal = animals[parseInt(hash.slice(32, hash.length), 16) % animals.length]
+export const getPseudonym = hash => ({
+    adjective: adjectives[parseInt(hash.slice(0, 32), 16) % adjectives.length],
+    animal: animals[parseInt(hash.slice(32, hash.length), 16) % animals.length]
+})
 
+export const toPrettyPseudonym = hash => {
+    const { adjective, animal } = getPseudonym(hash)
     return capitalize(adjective) + ' ' + capitalize(animal)
+}
+
+export const getIcon = hash => {
+    const { animal } = getPseudonym(hash)
+    return icons[animal]
 }
