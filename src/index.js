@@ -49,6 +49,12 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
         return
     }
 
+    // Stop if the post is deleted
+    if (post.deletedAt) {
+        await bot.say(`:skull: This post has been deleted. Your reply will not be sent.`)
+        return
+    }
+
     // Stop if the post is locked down
     if (post.lockedDownAt) {
         await bot.say(`:lock: This post is currently on lockdown. Your reply will not be sent.`)
