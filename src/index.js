@@ -30,10 +30,11 @@ controller.ready(async () => {
 })
 
 // Match anonymous replies sent via DMs
-const replyPattern = /^\d+:(\s|$)/
+// Matches "1337: hello" and "#1337: hello"
+const replyPattern = /^(#*)\d+:(\s|$)/
 controller.hears(replyPattern, 'direct_message', async (bot, message) => {
     const args = message.text.split(/\s/)
-    const postNumber = parseInt(args[0].slice(0, -1))
+    const postNumber = args[0].slice(0, -1).match(/\d+/g) // Remove the colon, then try to match a number
     const body = args.slice(1).join(' ')
 
     // Validate that there's content to send
