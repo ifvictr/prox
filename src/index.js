@@ -173,3 +173,15 @@ controller.on('slash_command', async (bot, message) => {
     const commandHandler = commands.get(subcommand)
     await commandHandler(bot, message, args)
 })
+
+controller.on('member_joined_channel', async (bot, message) => {
+    if (message.channel === process.env.SLACK_POST_CHANNEL_ID) {
+        await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> joined <#${process.env.SLACK_POST_CHANNEL_ID}>._`)
+    }
+})
+
+controller.on('member_left_channel', async (bot, message) => {
+    if (message.channel === process.env.SLACK_POST_CHANNEL_ID) {
+        await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> left <#${process.env.SLACK_POST_CHANNEL_ID}>._`)
+    }
+})
