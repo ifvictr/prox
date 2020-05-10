@@ -3,6 +3,7 @@ import { URL } from 'url'
 import { SubmissionLayout } from './blocks'
 import adjectives from './data/adjectives.json'
 import animals from './data/animals.json'
+import icons from './data/icons.json'
 import Post from './models/post'
 
 export const createSubmission = async (bot, channel, message) => {
@@ -48,6 +49,29 @@ export const getIdFromUrl = inputUrl => {
     return formattedId
 }
 
+export const getParentMessageId = async (api, channel, ts) => {
+    const { messages } = await api.conversations.replies({
+        channel,
+        ts,
+        latest: ts,
+        limit: 1
+    })
+
+    if (messages.length === 0) {
+        return null
+    }
+
+    return messages[0].thread_ts
+}
+
+export const getPreview = (length, text) => {
+    if (text.length <= length) {
+        return text
+    }
+
+    return text.substring(0, length) + '…'
+}
+
 export const hash = (value, salt) => crypto.createHash('sha256')
     .update(value)
     .update(salt).digest('hex').toString()
@@ -58,9 +82,17 @@ export const isUserInChannel = async (api, user, channel) => {
     return res.members.includes(user)
 }
 
-export const toPseudonym = hash => {
-    const adjective = adjectives[parseInt(hash.slice(0, 32), 16) % adjectives.length]
-    const animal = animals[parseInt(hash.slice(32, hash.length), 16) % animals.length]
+export const getPseudonym = hash => ({
+    adjective: adjectives[parseInt(hash.slice(0, 32), 16) % adjectives.length],
+    animal: animals[parseInt(hash.slice(32, hash.length), 16) % animals.length]
+})
 
+export const toPrettyPseudonym = hash => {
+    const { adjective, animal } = getPseudonym(hash)
     return capitalize(adjective) + ' ' + capitalize(animal)
+}
+
+export const getIcon = hash => {
+    const { animal } = getPseudonym(hash)
+    return icons[animal]
 }

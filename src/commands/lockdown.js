@@ -1,5 +1,5 @@
 import Post from '../models/post'
-import { isUserInChannel } from '../utils'
+import { getParentMessageId, getPreview, isUserInChannel, sendMessage } from '../utils'
 
 // /prox lockdown <post number>
 export default async (bot, message, args) => {
@@ -28,8 +28,6 @@ export default async (bot, message, args) => {
     post.lockedDownAt = post.lockedDownAt ? null : Date.now() // Toggle the post's lockdown status
     await post.save()
 
-    await bot.replyEphemeral(message, 'Lockdown status updated.')
-
     // Update the post message with the new lock status
     const updatedMessage = {
         id: post.postMessageId,
@@ -38,9 +36,19 @@ export default async (bot, message, args) => {
     }
     await bot.updateMessage(updatedMessage)
 
-    // Post status update in post thread
-    await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, post.postMessageId)
+    // Post status update in post thread. Attempt to get the parent message's ID.
+    // If it's null, then this must already be the top-level message.
+    const parentId = await getParentMessageId(bot.api, process.env.SLACK_POST_CHANNEL_ID, post.postMessageId) || post.postMessageId
+
+    await bot.startConversationInThread(process.env.SLACK_POST_CHANNEL_ID, null, parentId)
     await bot.say(post.lockedDownAt
         ? ':lock: _This post is now on lockdown. Anonymous replies sent after this will not be shown._'
         : ':unlock: _This post is no longer on lockdown. Anonymous replies sent will be shown again._')
+
+    // Notify the command sender
+    await bot.changeContext(message.reference)
+    await bot.replyEphemeral(message, 'Lockdown status updated.')
+
+    // Log status change
+    await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${post.lockedDownAt ? 'locked' : 'unlocked'} *#${post.postNumber}*:_\n>>> ${getPreview(50, post.body)}`)
 }
