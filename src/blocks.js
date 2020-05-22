@@ -1,3 +1,5 @@
+import { removeSpecialTags } from './utils'
+
 export const SubmissionLayout = ({ id, isSensitive, postChannel, postNumber, status, text, user }) => {
     const displayName = `<@${user}>` || 'You’ve'
     return [
@@ -16,7 +18,7 @@ export const SubmissionLayout = ({ id, isSensitive, postChannel, postNumber, sta
             type: 'section',
             text: {
                 type: 'mrkdwn',
-                text: `>>> ${text}`
+                text: `>>> ${removeSpecialTags(text)}`
             }
         },
         ...status === 'waiting'
