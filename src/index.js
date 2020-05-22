@@ -62,7 +62,11 @@ controller.hears(replyPattern, 'direct_message', async (bot, message) => {
         return
     }
 
-    await bot.say(`:ok_hand: Your reply to post *#${postNumber}* has been sent.`)
+    const res = await bot.api.chat.getPermalink({
+        channel: process.env.SLACK_POST_CHANNEL_ID,
+        message_ts: post.postMessageId
+    })
+    await bot.say(`:ok_hand: Your reply to <${res.permalink}|post *#${postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`)
 
     // Send reply
     const senderIdHash = hash(message.user, post.salt)
