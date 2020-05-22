@@ -1,5 +1,5 @@
 import Post from '../models/post'
-import { getParentMessageId, getPreview, isUserInChannel, sendMessage } from '../utils'
+import { getParentMessageId, getPreview, isUserInChannel, removeSpecialTags, sendMessage } from '../utils'
 
 // /prox lockdown <post number>
 export default async (bot, message, args) => {
@@ -32,7 +32,7 @@ export default async (bot, message, args) => {
     const updatedMessage = {
         id: post.postMessageId,
         conversation: { id: process.env.SLACK_POST_CHANNEL_ID },
-        text: `${post.lockedDownAt ? ':lock: ' : ''}*#${post.postNumber}:* ${post.body}`
+        text: `${post.lockedDownAt ? ':lock: ' : ''}*#${post.postNumber}:* ${removeSpecialTags(post.body)}`
     }
     await bot.updateMessage(updatedMessage)
 
@@ -50,5 +50,5 @@ export default async (bot, message, args) => {
     await bot.replyEphemeral(message, 'Lockdown status updated.')
 
     // Log status change
-    await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${post.lockedDownAt ? 'locked' : 'unlocked'} *#${post.postNumber}*:_\n>>> ${getPreview(50, post.body)}`)
+    await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${post.lockedDownAt ? 'locked' : 'unlocked'} *#${post.postNumber}*:_\n>>> ${getPreview(50, removeSpecialTags(post.body))}`)
 }

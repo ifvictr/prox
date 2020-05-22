@@ -6,7 +6,7 @@ import deleteCommand from './commands/delete'
 import lockdownCommand from './commands/lockdown'
 import Counter from './counter'
 import Post from './models/post'
-import { createSubmission, getIcon, getPreview, hash, sendMessage, toPrettyPseudonym } from './utils'
+import { createSubmission, getIcon, getPreview, hash, removeSpecialTags, sendMessage, toPrettyPseudonym } from './utils'
 
 // Set up MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true })
@@ -35,7 +35,7 @@ const replyPattern = /^(#*)\d+:(\s|$)/
 controller.hears(replyPattern, 'direct_message', async (bot, message) => {
     const args = message.text.split(/\s/)
     const postNumber = args[0].slice(0, -1).match(/\d+/g) // Remove the colon, then try to match a number
-    const body = args.slice(1).join(' ')
+    const body = removeSpecialTags(args.slice(1).join(' '))
 
     // Validate that there's content to send
     if (!body) {
@@ -100,7 +100,7 @@ controller.on('block_actions', async (bot, message) => {
     switch (action) {
         case 'post_approve':
             const newCount = await count.increment()
-            const mainContent = `*#${newCount}:* ${submission.body}`
+            const mainContent = `*#${newCount}:* ${removeSpecialTags(submission.body)}`
             let postMessage = await sendMessage(bot, process.env.SLACK_POST_CHANNEL_ID,
                 submission.markedSensitiveAt
                     ? `:warning: *#${newCount}:* _This post contains potentially sensitive content. Click on “View thread” to view it._`
@@ -146,7 +146,7 @@ controller.on('block_actions', async (bot, message) => {
 
     // Only log submission approval/rejection
     if (status !== 'waiting') {
-        await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${status} a submission:_\n>>> ${getPreview(50, submission.body)}`)
+        await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> ${status} a submission:_\n>>> ${getPreview(50, removeSpecialTags(submission.body))}`)
     }
 })
 
