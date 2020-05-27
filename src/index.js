@@ -18,9 +18,6 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Set up Slack adapter
 const app = new App({
-    clientId: process.env.SLACK_CLIENT_ID,
-    clientSigningSecret: process.env.SLACK_CLIENT_SIGNING_SECRET,
-    clientSecret: process.env.SLACK_CLIENT_SECRET,
     signingSecret: process.env.SLACK_CLIENT_SIGNING_SECRET,
     token: process.env.SLACK_CLIENT_BOT_TOKEN,
     endpoints: '/api/messages'
