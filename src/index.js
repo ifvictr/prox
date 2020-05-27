@@ -78,7 +78,7 @@ app.message(channelType('im'), replyPattern, async ({ client, event, say }) => {
         channel: config.postChannelId,
         message_ts: post.postMessageId
     })
-    await say(`:ok_hand: Your reply to <${permalink}|post *#${postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`)
+    await say(`:ok_hand: Your reply to <${permalink}|*#${postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`)
 
     // Send reply
     const senderIdHash = hash(event.user, post.salt)
