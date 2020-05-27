@@ -10,7 +10,7 @@ import Post from './models/post'
 import { createSubmission, getIcon, getPreview, hash, removeSpecialTags, sendEphemeralMessage, sendMessage, toPrettyPseudonym } from './utils'
 
 // Set up MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(config.databaseUrl, {
     useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -18,14 +18,14 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Set up Slack adapter
 const app = new App({
-    signingSecret: process.env.SLACK_CLIENT_SIGNING_SECRET,
-    token: process.env.SLACK_CLIENT_BOT_TOKEN,
+    signingSecret: config.signingSecret,
+    token: config.botToken,
     endpoints: '/api/messages'
 })
 const count = new Counter()
 
     ; (async () => {
-        await app.start(process.env.PORT || 3000)
+        await app.start(config.port)
         await count.init()
 
         console.log('⚡️ Bolt app is running!')
