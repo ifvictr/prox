@@ -61,7 +61,7 @@ export default async (client, command, args) => {
             await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> deleted *#${post.postNumber}*:_\n>>> ${getPreview(50, post.body)}`)
         }
 
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Message deleted.')
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, `${post ? 'Post' : 'Message'} deleted.`)
     } catch (e) {
         await sendEphemeralMessage(client, command.channel_id, command.user_id, `Failed to delete. Reason: \`${e.data.error}\``)
     }
