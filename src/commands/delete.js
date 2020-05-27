@@ -1,17 +1,18 @@
 import isUrl from 'is-url'
+import config from '../config'
 import Post from '../models/post'
-import { getIdFromUrl, getPreview, isUserInChannel, sendMessage } from '../utils'
+import { getIdFromUrl, getPreview, isUserInChannel, sendEphemeralMessage, sendMessage } from '../utils'
 
 // /prox delete <post number|url> [hard]
-export default async (bot, message, args) => {
+export default async (client, command, args) => {
     // Check if the user is part of the review channel
-    if (!(await isUserInChannel(bot.api, message.user, process.env.SLACK_REVIEW_CHANNEL_ID))) {
-        await bot.replyEphemeral(message, 'You don’t have permission to run this command.')
+    if (!(await isUserInChannel(client, command.user_id, config.reviewChannelId))) {
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You don’t have permission to run this command.')
         return
     }
 
     if (!args[1]) {
-        await bot.replyEphemeral(message, 'Please specify a post number or message URL.')
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Please specify a post number or message URL.')
         return
     }
 
@@ -21,7 +22,7 @@ export default async (bot, message, args) => {
     if (isUrl(args[1])) { // Is URL?
         messageId = getIdFromUrl(args[1])
         if (!messageId) {
-            await bot.replyEphemeral(message, 'Couldn’t extract a message ID from the given URL.')
+            await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Couldn’t extract a message ID from the given URL.')
             return
         }
 
@@ -30,41 +31,38 @@ export default async (bot, message, args) => {
     } else if (!isNaN(args[1])) { // Is post number?
         post = await Post.findOne({ postNumber: args[1] })
         if (!post) {
-            await bot.replyEphemeral(message, 'The specified post couldn’t be found.')
+            await sendEphemeralMessage(client, command.channel_id, command.user_id, 'The specified post couldn’t be found.')
             return
         }
 
         messageId = post.postMessageId
     } else { // Is invalid input
-        await bot.replyEphemeral(message, 'Input must be a post number or message URL.')
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Input must be a post number or message URL.')
         return
     }
 
     // Delete the message using retrieved ID
     try {
-        const updatedMessage = {
-            id: messageId,
-            conversation: { id: process.env.SLACK_POST_CHANNEL_ID },
+        const options = {
+            channel: config.postChannelId,
+            ts: messageId,
             text: `:skull: ${post ? `*#${post.postNumber}:* _This post` : '_This message'} has been deleted._`
         }
 
         // Delete depending on sender's specified method. Defaults to soft
         if (args[2] === 'hard') {
-            await bot.deleteMessage(updatedMessage)
+            await client.chat.delete(options)
         } else {
-            await bot.updateMessage(updatedMessage)
+            await client.chat.update(options)
         }
 
-        // Delete from database also
-        await post.delete()
-
-        await bot.replyEphemeral(message, 'Message deleted.')
-
-        // Log deletion if it was a post
         if (post) {
-            await sendMessage(bot, process.env.SLACK_STREAM_CHANNEL_ID, `_<@${message.user}> deleted *#${post.postNumber}*:_\n>>> ${getPreview(50, post.body)}`)
+            await post.delete()
+            await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> deleted *#${post.postNumber}*:_\n>>> ${getPreview(50, post.body)}`)
         }
+
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Message deleted.')
     } catch (e) {
-        await bot.replyEphemeral(message, `Failed to delete. Reason: \`${e.data.error}\``)
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, `Failed to delete. Reason: \`${e.data.error}\``)
     }
 }

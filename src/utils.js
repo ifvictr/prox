@@ -6,29 +6,43 @@ import animals from './data/animals.json'
 import icons from './data/icons.json'
 import Post from './models/post'
 
-export const createSubmission = async (bot, channel, message) => {
+export const createSubmission = async (client, channel, event) => {
     const salt = crypto.randomBytes(16).toString('hex')
     const newSubmission = new Post({
-        body: message.text,
-        authorIdHash: hash(message.user, salt),
+        body: event.text,
+        authorIdHash: hash(event.user, salt),
         salt
     })
 
     // Create a ticket for the submission
-    const props = { id: newSubmission._id, status: 'waiting', text: message.text }
-    const reviewMessage = await sendMessage(bot, channel, { blocks: SubmissionLayout(props) })
-    newSubmission.reviewMessageId = reviewMessage.id
+    const props = { id: newSubmission._id, status: 'waiting', text: event.text }
+    const reviewMessage = await sendMessage(client, channel, { blocks: SubmissionLayout(props) })
+    newSubmission.reviewMessageId = reviewMessage.ts
 
     await newSubmission.save()
     return reviewMessage
 }
 
-export const sendMessage = async (bot, channel, message) => {
-    const originalContext = bot._config.reference
-    await bot.startConversationInChannel(channel)
-    const sentMessage = await bot.say(message)
-    await bot.changeContext(originalContext)
-    return sentMessage
+export const sendEphemeralMessage = async (client, channel, user, opts) => {
+    let options = { channel, user }
+    if (typeof opts === 'string') {
+        options.text = opts
+    }
+    options = { ...options, ...opts }
+
+    const res = await client.chat.postEphemeral(options)
+    return res
+}
+
+export const sendMessage = async (client, channel, opts) => {
+    let options = { channel }
+    if (typeof opts === 'string') {
+        options.text = opts
+    }
+    options = { ...options, ...opts }
+
+    const res = await client.chat.postMessage(options)
+    return res
 }
 
 export const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
@@ -49,8 +63,8 @@ export const getIdFromUrl = inputUrl => {
     return formattedId
 }
 
-export const getParentMessageId = async (api, channel, ts) => {
-    const { messages } = await api.conversations.replies({
+export const getParentMessageId = async (client, channel, ts) => {
+    const { messages } = await client.conversations.replies({
         channel,
         ts,
         latest: ts,
@@ -76,9 +90,9 @@ export const hash = (value, salt) => crypto.createHash('sha256')
     .update(value)
     .update(salt).digest('hex').toString()
 
-export const isUserInChannel = async (api, user, channel) => {
+export const isUserInChannel = async (client, user, channel) => {
     // TODO: Handle pagination
-    const res = await api.conversations.members({ channel })
+    const res = await client.conversations.members({ channel })
     return res.members.includes(user)
 }
 
