@@ -1,5 +1,6 @@
 import deleteSubcommand from './delete'
 import lockdownSubcommand from './lockdown'
+import { sendEphemeralMessage } from '../../utils'
 
 export default app => {
     const subcommands = new Map([
