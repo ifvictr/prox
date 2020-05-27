@@ -85,10 +85,10 @@ app.message(channelType('im'), replyPattern, async ({ client, event, say }) => {
     const displayName = toPrettyPseudonym(senderIdHash) + (senderIdHash === post.authorIdHash ? ' (OP)' : '')
     const icon = getIcon(senderIdHash)
     await sendMessage(client, config.postChannelId, {
-        thread_ts: post.postMessageId,
         text: body,
+        thread_ts: post.postMessageId,
         icon_emoji: icon ? `:${icon}:` : null,
-        username: displayName,
+        username: displayName
     })
 
     await sendMessage(client, config.streamChannelId, `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to *#${postNumber}*:_\n>>> ${body}`)
