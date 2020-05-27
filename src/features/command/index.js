@@ -8,9 +8,12 @@ export default app => {
         ['lockdown', lockdownSubcommand]
     ])
 
-    app.command('/prox', async ({ ack, client, command }) => {
+    app.command('/prox', async ({ ack, ...middlewareArgs }) => {
         await ack()
 
+        const { client, command } = middlewareArgs
+
+        // Find the subcommand
         const args = command.text.split(/\s+/)
         const subcommand = args[0].toLowerCase()
         if (!subcommands.has(subcommand)) {
@@ -18,8 +21,8 @@ export default app => {
             return
         }
 
-        // Pass control to appropriate handler
+        // Pass off control to the handler
         const subcommandHandler = subcommands.get(subcommand)
-        await subcommandHandler(client, command, args)
+        await subcommandHandler(middlewareArgs, args)
     })
 }

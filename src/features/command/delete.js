@@ -4,7 +4,7 @@ import Post from '../../models/post'
 import { getIdFromUrl, getPreview, isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils'
 
 // /prox delete <post number|url> [hard]
-export default async (client, command, args) => {
+export default async ({ client, command }, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(client, command.user_id, config.reviewChannelId))) {
         await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You don’t have permission to run this command.')
