@@ -1,6 +1,6 @@
-import config from '../config'
-import Post from '../models/post'
-import { getParentMessageId, getPreview, isUserInChannel, removeSpecialTags, sendEphemeralMessage, sendMessage } from '../utils'
+import config from '../../config'
+import Post from '../../models/post'
+import { getParentMessageId, getPreview, isUserInChannel, removeSpecialTags, sendEphemeralMessage, sendMessage } from '../../utils'
 
 // /prox lockdown <post number>
 export default async (client, command, args) => {
