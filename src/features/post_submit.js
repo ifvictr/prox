@@ -1,6 +1,6 @@
 import config from '../config'
 import { channelType } from '../middlewares'
-import { createSubmission } from '../utils'
+import { createSubmission } from '../utils/slack'
 
 export default app => {
     // Match non-command DMs

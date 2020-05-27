@@ -1,7 +1,8 @@
 import config from '../config'
 import { channelType } from '../middlewares'
 import Post from '../models/post'
-import { getIcon, hash, removeSpecialTags, sendMessage, toPrettyPseudonym } from '../utils'
+import { getIcon, hash, removeSpecialTags, toPrettyPseudonym } from '../utils'
+import { sendMessage } from '../utils/slack'
 
 export default app => {
     // Match anonymous replies sent via DMs

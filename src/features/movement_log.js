@@ -1,6 +1,6 @@
 import config from '../config'
 import { channel } from '../middlewares'
-import { sendMessage } from '../utils'
+import { sendMessage } from '../utils/slack'
 
 export default app => {
     app.event(channel(config.postChannelId), 'member_joined_channel', async ({ client, event }) => {

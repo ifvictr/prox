@@ -1,6 +1,7 @@
 import config from '../../config'
 import Post from '../../models/post'
-import { getParentMessageId, getPreview, isUserInChannel, removeSpecialTags, sendEphemeralMessage, sendMessage } from '../../utils'
+import { getPreview, removeSpecialTags } from '../../utils'
+import { getParentMessageId, isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils/slack'
 
 // /prox lockdown <post number>
 export default async ({ client, command }, args) => {

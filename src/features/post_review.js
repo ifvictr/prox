@@ -1,7 +1,8 @@
 import { SubmissionLayout } from '../blocks'
 import config from '../config'
 import Post from '../models/post'
-import { getPreview, removeSpecialTags, sendMessage } from '../utils'
+import { getPreview, removeSpecialTags } from '../utils'
+import { sendMessage } from '../utils/slack'
 
 export default app => {
     app.action('post_approve', async ({ ack, action, body, client }) => {

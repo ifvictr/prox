@@ -1,6 +1,6 @@
 import deleteSubcommand from './delete'
 import lockdownSubcommand from './lockdown'
-import { sendEphemeralMessage } from '../../utils'
+import { sendEphemeralMessage } from '../../utils/slack'
 
 export default app => {
     const subcommands = new Map([

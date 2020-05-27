@@ -1,7 +1,8 @@
 import isUrl from 'is-url'
 import config from '../../config'
 import Post from '../../models/post'
-import { getIdFromUrl, getPreview, isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils'
+import { getIdFromUrl, getPreview } from '../../utils'
+import { isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils/slack'
 
 // /prox delete <post number|url> [hard]
 export default async ({ client, command }, args) => {
