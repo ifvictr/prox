@@ -215,7 +215,7 @@ app.action('post_toggle_sensitive', async ({ ack, action, body, client }) => {
     })
 })
 
-const commands = new Map([
+const subcommands = new Map([
     ['delete', deleteCommand],
     ['lockdown', lockdownCommand]
 ])
@@ -224,14 +224,14 @@ app.command('/prox', async ({ ack, client, command }) => {
 
     const args = command.text.split(' ')
     const subcommand = args[0].toLowerCase()
-    if (!commands.has(subcommand)) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Command not found.')
+    if (!subcommands.has(subcommand)) {
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Subcommand not found.')
         return
     }
 
     // Pass control to appropriate handler
-    const commandHandler = commands.get(subcommand)
-    await commandHandler(client, command, args)
+    const subcommandHandler = subcommands.get(subcommand)
+    await subcommandHandler(client, command, args)
 })
 
 app.event(channel(config.postChannelId), 'member_joined_channel', async ({ client, event }) => {
