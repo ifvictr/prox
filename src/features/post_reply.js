@@ -20,7 +20,7 @@ export default app => {
         }
 
         // Validate that the post exists
-        const post = await Post.findOne({ postNumber }).exec()
+        const post = await Post.findOne({ postNumber })
         if (!post) {
             await say(`:confused: Couldn’t seem to find post *#${postNumber}*.`)
             return

@@ -10,7 +10,7 @@ export default app => {
         await ack()
 
         const id = action.value
-        const submission = await Post.findById(id).exec()
+        const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
             await sendMessage(client, action.channel, {
@@ -64,7 +64,7 @@ export default app => {
         await ack()
 
         const id = action.value
-        const submission = await Post.findById(id).exec()
+        const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
             await sendMessage(client, action.channel, {
@@ -98,7 +98,7 @@ export default app => {
         await ack()
 
         const id = action.value
-        const submission = await Post.findById(id).exec()
+        const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
             await sendMessage(client, action.channel, {
