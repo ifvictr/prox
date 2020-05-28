@@ -36,9 +36,13 @@ export const getParentMessageId = async (client, channel, ts) => {
 }
 
 export const isUserInChannel = async (client, user, channel) => {
-    // TODO: Handle pagination
-    const res = await client.conversations.members({ channel })
-    return res.members.includes(user)
+    for await (const page of client.paginate('conversations.members', { channel })) {
+        if (page.members.includes(user)) {
+            return true
+        }
+    }
+
+    return false
 }
 
 export const sendEphemeralMessage = async (client, channel, user, opts) => {
