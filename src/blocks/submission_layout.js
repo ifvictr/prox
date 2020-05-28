@@ -49,7 +49,7 @@ export default ({ id, isSensitive, postChannel, postNumber, status, text, user }
                         action_id: 'post_toggle_sensitive',
                         text: {
                             type: 'plain_text',
-                            text: `${isSensitive ? 'Unmark' : 'Mark'} as sensitive`
+                            text: `${isSensitive ? ':warning: Unmark' : 'Mark'} as sensitive`
                         },
                         value: id
                     }
