@@ -1,6 +1,15 @@
 import { removeSpecialTags } from '../utils'
 
-export default ({ id, isSensitive, postChannel, postNumber, status, text, user }) => {
+export default ({
+    id,
+    isSensitive,
+    postChannel,
+    postNumber,
+    postPermalink,
+    status,
+    text,
+    user
+}) => {
     const displayName = `<@${user}>` || 'You’ve'
     return [
         {
@@ -9,7 +18,7 @@ export default ({ id, isSensitive, postChannel, postNumber, status, text, user }
                 type: 'mrkdwn',
                 text: ({
                     waiting: ':bell: You have a new submission to review!',
-                    approved: `:+1: ${displayName} approved this submission. It’s now *#${postNumber}* in <#${postChannel}>.`,
+                    approved: `:+1: ${displayName} approved this submission. It’s now <${postPermalink}|*#${postNumber}*> in <#${postChannel}>.`,
                     rejected: `:-1: ${displayName} rejected this submission.`
                 })[status] || ':rotating_light: Something went wrong.',
             }

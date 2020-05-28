@@ -42,11 +42,16 @@ export default app => {
 
         await submission.save()
 
+        const { permalink: postPermalink } = await client.chat.getPermalink({
+            channel: config.postChannelId,
+            message_ts: submission.postMessageId
+        })
         const props = {
             id,
             isSensitive: Boolean(submission.markedSensitiveAt),
             postChannel: config.postChannelId,
             postNumber: submission.postNumber,
+            postPermalink,
             status: 'approved',
             text: submission.body,
             user: body.user.id
