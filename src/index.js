@@ -1,11 +1,9 @@
 import { App } from '@slack/bolt'
 import mongoose from 'mongoose'
 import config from './config'
-import Counter from './counter'
+import counter from './counter'
 import * as features from './features'
 import { sendMessage } from './utils/slack'
-
-export const counter = new Counter()
 
 const init = async () => {
     console.log('Starting Prox…')
