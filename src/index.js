@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import config from './config'
 import Counter from './counter'
 import * as features from './features'
+import { sendMessage } from './utils/slack'
 
 // Set up MongoDB
 mongoose.connect(config.databaseUrl, {
@@ -33,4 +34,10 @@ export const counter = new Counter()
 
         const featuresCount = Object.keys(features).length
         console.log(`Loaded ${featuresCount} feature${featuresCount === 1 ? '' : 's'}`)
+
+        await sendMessage(app.client, config.streamChannelId, {
+            token: config.botToken,
+            channel: config.streamChannelId,
+            text: ':rocket: _Prox is now online!_'
+        })
     })()
