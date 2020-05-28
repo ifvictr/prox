@@ -12,7 +12,11 @@ export const createSubmission = async (client, channel, event) => {
     })
 
     // Create a ticket for the submission
-    const props = { id: newSubmission.id, status: 'waiting', text: event.text }
+    const props = {
+        id: newSubmission.id,
+        status: 'waiting',
+        text: event.text
+    }
     const reviewMessage = await sendMessage(client, channel, { blocks: SubmissionLayout(props) })
     newSubmission.reviewMessageId = reviewMessage.ts
 
