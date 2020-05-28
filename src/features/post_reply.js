@@ -32,9 +32,9 @@ export default app => {
             return
         }
 
-        // Stop if the post is locked down
+        // Stop if the post is locked
         if (post.lockedDownAt) {
-            await say(`:lock: This post is currently on lockdown. Your reply will not be sent.`)
+            await say(`:lock: This post is currently locked. Your reply will not be sent.`)
             return
         }
 

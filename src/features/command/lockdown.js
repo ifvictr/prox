@@ -27,7 +27,7 @@ export default async ({ client, command }, args) => {
         return
     }
 
-    post.lockedDownAt = post.lockedDownAt ? null : Date.now() // Toggle the post's lockdown status
+    post.lockedDownAt = post.lockedDownAt ? null : Date.now() // Toggle the post's lock status
     await post.save()
 
     // Update the post message with the new lock status
@@ -42,13 +42,13 @@ export default async ({ client, command }, args) => {
     const parentId = await getParentMessageId(client, config.postChannelId, post.postMessageId)
     await sendMessage(client, config.postChannelId, {
         text: post.lockedDownAt
-            ? ':lock: _This post is now on lockdown. Anonymous replies sent after this will not be shown._'
-            : ':unlock: _This post is no longer on lockdown. Anonymous replies sent will be shown again._',
+            ? ':lock: _This post is now locked. Anonymous replies sent after this will not be shown._'
+            : ':unlock: _This post is no longer locked. Anonymous replies sent will be shown again._',
         thread_ts: parentId || post.postMessageId
     })
 
     // Notify the command sender
-    await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Lockdown status updated.')
+    await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Lock status updated.')
 
     // Log status change
     await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> ${post.lockedDownAt ? 'locked' : 'unlocked'} *#${post.postNumber}*:_\n>>> ${getPreview(50, removeSpecialTags(post.body))}`)
