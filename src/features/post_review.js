@@ -2,7 +2,7 @@ import { SubmissionLayout } from '../blocks'
 import config from '../config'
 import counter from '../counter'
 import Post from '../models/post'
-import { getPreview, removeSpecialTags } from '../utils'
+import { removeSpecialTags } from '../utils'
 import { sendMessage } from '../utils/slack'
 
 export default app => {
@@ -57,7 +57,7 @@ export default app => {
             blocks: SubmissionLayout(props)
         })
 
-        await sendMessage(client, config.streamChannelId, `_<@${body.user.id}> approved a submission:_\n>>> ${getPreview(50, removeSpecialTags(submission.body))}`)
+        await sendMessage(client, config.streamChannelId, `_<@${body.user.id}> approved a submission:_\n>>> ${removeSpecialTags(submission.body)}`)
     })
 
     app.action('post_reject', async ({ ack, action, body, client }) => {
@@ -91,7 +91,7 @@ export default app => {
             blocks: SubmissionLayout(props)
         })
 
-        await sendMessage(client, config.streamChannelId, `_<@${body.user.id}> rejected a submission:_\n>>> ${getPreview(50, removeSpecialTags(submission.body))}`)
+        await sendMessage(client, config.streamChannelId, `_<@${body.user.id}> rejected a submission:_\n>>> ${removeSpecialTags(submission.body)}`)
     })
 
     app.action('post_toggle_sensitive', async ({ ack, action, body, client }) => {

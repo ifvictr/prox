@@ -27,14 +27,6 @@ export const getIdFromUrl = inputUrl => {
     return formattedId
 }
 
-export const getPreview = (length, text) => {
-    if (text.length <= length) {
-        return text
-    }
-
-    return text.substring(0, length) + '…'
-}
-
 export const getPseudonym = hash => ({
     adjective: adjectives[parseInt(hash.slice(0, 32), 16) % adjectives.length],
     animal: animals[parseInt(hash.slice(32, hash.length), 16) % animals.length]
