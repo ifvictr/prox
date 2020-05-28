@@ -34,6 +34,8 @@ const init = async () => {
 
     // Start receiving events
     await app.start(config.port)
+    console.log(`Listening on port ${config.port}`)
+
     await sendMessage(app.client, config.streamChannelId, {
         token: config.botToken,
         channel: config.streamChannelId,
