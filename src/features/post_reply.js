@@ -38,15 +38,6 @@ export default app => {
             return
         }
 
-        const { permalink } = await client.chat.getPermalink({
-            channel: config.postChannelId,
-            message_ts: post.postMessageId
-        })
-        await say({
-            text: `:ok_hand: Your reply to <${permalink}|*#${postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`,
-            unfurl_media: false
-        })
-
         // Send reply
         const senderIdHash = hash(event.user, post.salt)
         const displayName = toPrettyPseudonym(senderIdHash) + (senderIdHash === post.authorIdHash ? ' (OP)' : '')
@@ -58,6 +49,18 @@ export default app => {
             username: displayName
         })
 
-        await sendMessage(client, config.streamChannelId, `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to *#${postNumber}*:_\n>>> ${body}`)
+        const { permalink: postPermalink } = await client.chat.getPermalink({
+            channel: config.postChannelId,
+            message_ts: post.postMessageId
+        })
+        await say({
+            text: `:ok_hand: Your reply to <${postPermalink}|*#${postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`,
+            unfurl_media: false
+        })
+
+        await sendMessage(client, config.streamChannelId, {
+            text: `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to <${postPermalink}|*#${postNumber}*>:_\n>>> ${body}`,
+            unfurl_media: false
+        })
     })
 }
