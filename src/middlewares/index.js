@@ -1,4 +1,4 @@
-const filterEvents = filterFn => {
+const filterEvent = filterFn => {
     return async ({ event, next }) => {
         if (filterFn(event)) {
             await next()
@@ -6,10 +6,10 @@ const filterEvents = filterFn => {
     }
 }
 
-export const channel = id => filterEvents(event => event.channel === id)
+export const channel = id => filterEvent(event => event.channel === id)
 
-export const channelType = type => filterEvents(event => event.channel_type === type)
+export const channelType = type => filterEvent(event => event.channel_type === type)
 
-export const noBotMessages = filterEvents(event => !('subtype' in event) || event.subtype !== 'bot_message')
+export const noBotMessages = filterEvent(event => !('subtype' in event) || event.subtype !== 'bot_message')
 
-export const threaded = (shouldBeThreaded = true) => filterEvents(event => 'thread_ts' in event === shouldBeThreaded)
+export const threaded = (shouldBeThreaded = true) => filterEvent(event => 'thread_ts' in event === shouldBeThreaded)
