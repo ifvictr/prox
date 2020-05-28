@@ -55,12 +55,12 @@ export default app => {
         })
         await say({
             text: `:ok_hand: Your reply to <${postPermalink}|*#${postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`,
-            unfurl_media: false
+            unfurl_links: false
         })
 
         await sendMessage(client, config.streamChannelId, {
             text: `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to <${postPermalink}|*#${postNumber}*>:_\n>>> ${body}`,
-            unfurl_media: false
+            unfurl_links: false
         })
     })
 }
