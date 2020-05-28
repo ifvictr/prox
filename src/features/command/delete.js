@@ -1,7 +1,7 @@
 import isUrl from 'is-url'
 import config from '../../config'
 import Post from '../../models/post'
-import { getIdFromUrl, getPreview } from '../../utils'
+import { getIdFromUrl } from '../../utils'
 import { isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils/slack'
 
 // /prox delete <post number|url> [hard]
@@ -59,7 +59,7 @@ export default async ({ client, command }, args) => {
 
         if (post) {
             await post.delete()
-            await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> deleted *#${post.postNumber}*:_\n>>> ${getPreview(50, post.body)}`)
+            await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> deleted *#${post.postNumber}*._`)
         }
 
         await sendEphemeralMessage(client, command.channel_id, command.user_id, `${post ? 'Post' : 'Message'} deleted.`)

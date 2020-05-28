@@ -1,6 +1,6 @@
 import config from '../../config'
 import Post from '../../models/post'
-import { getPreview, removeSpecialTags } from '../../utils'
+import { removeSpecialTags } from '../../utils'
 import { getParentMessageId, isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils/slack'
 
 // /prox lockdown <post number>
@@ -51,5 +51,5 @@ export default async ({ client, command }, args) => {
     await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Lock status updated.')
 
     // Log status change
-    await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> ${post.lockedDownAt ? 'locked' : 'unlocked'} *#${post.postNumber}*:_\n>>> ${getPreview(50, removeSpecialTags(post.body))}`)
+    await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> ${post.lockedDownAt ? 'locked' : 'unlocked'} *#${post.postNumber}*._`)
 }
