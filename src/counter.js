@@ -32,4 +32,6 @@ class Counter {
     }
 }
 
-export default Counter
+const counter = new Counter()
+
+export default counter
