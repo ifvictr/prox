@@ -24,8 +24,7 @@
     "start": "yarn build && node ./build/index.js"
   },
   "dependencies": {
-    "botbuilder-adapter-slack": "^1.0.10",
-    "botkit": "^4.8.1",
+    "@slack/bolt": "^2.1.1",
     "dotenv": "^8.2.0",
     "is-url": "^1.2.4",
     "mongoose": "^5.9.6",
