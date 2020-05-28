@@ -3,6 +3,7 @@ import config from '../config'
 import Post from '../models/post'
 import { getPreview, removeSpecialTags } from '../utils'
 import { sendMessage } from '../utils/slack'
+import { counter } from '../'
 
 export default app => {
     app.action('post_approve', async ({ ack, action, body, client }) => {
@@ -19,7 +20,7 @@ export default app => {
             return
         }
 
-        const newCount = await count.increment()
+        const newCount = await counter.increment()
         const mainContent = `*#${newCount}:* ${removeSpecialTags(submission.body)}`
         let postMessage = await sendMessage(client, config.postChannelId,
             submission.markedSensitiveAt

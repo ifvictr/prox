@@ -17,13 +17,13 @@ const app = new App({
     token: config.botToken,
     endpoints: '/api/messages'
 })
-const count = new Counter()
+export const counter = new Counter()
 
     ; (async () => {
         console.log('Starting Prox…')
 
         await app.start(config.port)
-        await count.init()
+        await counter.init()
 
         // Load feature modules
         for (const [featureName, handler] of Object.entries(features)) {
