@@ -57,7 +57,10 @@ export default app => {
             blocks: SubmissionLayout(props)
         })
 
-        await sendMessage(client, config.streamChannelId, `_<@${body.user.id}> approved a submission:_\n>>> ${removeSpecialTags(submission.body)}`)
+        await sendMessage(client, config.streamChannelId, {
+            text: `_<@${body.user.id}> approved a submission:_\n>>> ${removeSpecialTags(submission.body)}`,
+            unfurl_links: false
+        })
     })
 
     app.action('post_reject', async ({ ack, action, body, client }) => {
@@ -91,7 +94,10 @@ export default app => {
             blocks: SubmissionLayout(props)
         })
 
-        await sendMessage(client, config.streamChannelId, `_<@${body.user.id}> rejected a submission:_\n>>> ${removeSpecialTags(submission.body)}`)
+        await sendMessage(client, config.streamChannelId, {
+            text: `_<@${body.user.id}> rejected a submission:_\n>>> ${removeSpecialTags(submission.body)}`,
+            unfurl_links: false
+        })
     })
 
     app.action('post_toggle_sensitive', async ({ ack, action, body, client }) => {
