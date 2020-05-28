@@ -114,11 +114,8 @@ export default app => {
         const props = {
             id,
             isSensitive: Boolean(submission.markedSensitiveAt),
-            postChannel: config.postChannelId,
-            postNumber: submission.postNumber,
             status: 'waiting',
-            text: submission.body,
-            user: body.user.id
+            text: submission.body
         }
         await client.chat.update({
             channel: config.reviewChannelId,
