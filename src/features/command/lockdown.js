@@ -51,5 +51,12 @@ export default async ({ client, command }, args) => {
     await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Lock status updated.')
 
     // Log status change
-    await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> ${post.lockedDownAt ? 'locked' : 'unlocked'} *#${post.postNumber}*._`)
+    const { permalink: postPermalink } = await client.chat.getPermalink({
+        channel: config.postChannelId,
+        message_ts: post.postMessageId
+    })
+    await sendMessage(client, config.streamChannelId, {
+        text: `_<@${command.user_id}> ${post.lockedDownAt ? 'locked' : 'unlocked'} <${postPermalink}|*#${post.postNumber}*>._`,
+        unfurl_links: false
+    })
 }
