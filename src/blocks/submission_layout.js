@@ -1,6 +1,6 @@
-import { removeSpecialTags } from './utils'
+import { removeSpecialTags } from '../utils'
 
-export const SubmissionLayout = ({ id, isSensitive, postChannel, postNumber, status, text, user }) => {
+export default ({ id, isSensitive, postChannel, postNumber, status, text, user }) => {
     const displayName = `<@${user}>` || 'You’ve'
     return [
         {
