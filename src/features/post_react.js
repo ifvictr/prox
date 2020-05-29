@@ -24,7 +24,7 @@ export default app => {
         }
 
         try {
-            const displayName = message.user ? `<@${message.user}>` : message.username
+            const displayName = message.user ? `<@${message.user}>` : `*${message.username}*`
             await Promise.all([
                 client.reactions.add({
                     channel: event.item.channel,
