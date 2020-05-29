@@ -31,10 +31,16 @@ export default app => {
                     name: event.reaction,
                     timestamp: event.item.ts
                 }),
-                sendEphemeralMessage(client, event.item.channel, event.user, `Your :${event.reaction}: to ${displayName}’s message has been sent!`)
+                sendEphemeralMessage(client, event.item.channel, event.user, {
+                    text: `Your reaction :${event.reaction}: to ${displayName} has been mirrored! Remove your original reaction if you haven’t already.`,
+                    thread_ts: message.thread_ts
+                })
             ])
         } catch (e) {
-            await sendEphemeralMessage(client, event.item.channel, event.user, `Failed to react. Reason: \`${e.data.error}\``)
+            await sendEphemeralMessage(client, event.item.channel, event.user, {
+                text: `Failed to react. Reason: \`${e.data.error}\``,
+                thread_ts: message.thread_ts
+            })
         }
     })
 }
