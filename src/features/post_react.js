@@ -25,17 +25,15 @@ export default app => {
 
         try {
             const displayName = message.user ? `<@${message.user}>` : `*${message.username}*`
-            await Promise.all([
-                client.reactions.add({
-                    channel: event.item.channel,
-                    name: event.reaction,
-                    timestamp: event.item.ts
-                }),
-                sendEphemeralMessage(client, event.item.channel, event.user, {
-                    text: `Your reaction :${event.reaction}: to ${displayName} has been mirrored! Remove your original reaction if you haven’t already.`,
-                    thread_ts: message.thread_ts
-                })
-            ])
+            await client.reactions.add({
+                channel: event.item.channel,
+                name: event.reaction,
+                timestamp: event.item.ts
+            })
+            await sendEphemeralMessage(client, event.item.channel, event.user, {
+                text: `Your reaction :${event.reaction}: to ${displayName} has been mirrored! Remove your original reaction if you haven’t already.`,
+                thread_ts: message.thread_ts
+            })
         } catch (e) {
             await sendEphemeralMessage(client, event.item.channel, event.user, {
                 text: `Failed to react. Reason: \`${e.data.error}\``,
