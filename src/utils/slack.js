@@ -24,6 +24,21 @@ export const createSubmission = async (client, channel, event) => {
     return reviewMessage
 }
 
+export const getMessage = async (client, channel, ts) => {
+    const { messages } = await client.conversations.replies({
+        channel,
+        ts,
+        latest: ts,
+        limit: 1
+    })
+
+    if (messages.length === 0) {
+        return null
+    }
+
+    return messages[0]
+}
+
 export const getParentMessageId = async (client, channel, ts) => {
     const { messages } = await client.conversations.replies({
         channel,

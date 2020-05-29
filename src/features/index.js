@@ -1,5 +1,6 @@
 export { default as command } from './command'
 export { default as movementLog } from './movement_log'
+export { default as postReact } from './post_react'
 export { default as postReply } from './post_reply'
 export { default as postReview } from './post_review'
 export { default as postSubmit } from './post_submit'
