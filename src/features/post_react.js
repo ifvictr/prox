@@ -20,7 +20,7 @@ export default app => {
         // Can only be used in threaded replies
         if (!shortcut.message.thread_ts || shortcut.message.ts === shortcut.message.thread_ts) {
             await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
-                text: `You can only use this on threaded messages.`,
+                text: 'You can only use this on threaded messages.',
                 thread_ts: shortcut.message.thread_ts
             })
             return
@@ -56,7 +56,7 @@ export default app => {
         const senderIdHash = hash(shortcut.user.id, post.salt)
         if (senderIdHash !== post.authorIdHash) {
             await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
-                text: `Only the author of this post can use anonymous reactions.`,
+                text: 'Only the author of this post can use anonymous reactions.',
                 thread_ts: shortcut.message.thread_ts
             })
             return
