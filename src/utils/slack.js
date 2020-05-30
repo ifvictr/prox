@@ -40,18 +40,8 @@ export const getMessage = async (client, channel, ts) => {
 }
 
 export const getParentMessageId = async (client, channel, ts) => {
-    const { messages } = await client.conversations.replies({
-        channel,
-        ts,
-        latest: ts,
-        limit: 1
-    })
-
-    if (messages.length === 0) {
-        return null
-    }
-
-    return messages[0].thread_ts
+    const message = await getMessage(client, channel, ts)
+    return message?.thread_ts
 }
 
 export const isUserInChannel = async (client, user, channel) => {
