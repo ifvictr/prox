@@ -62,6 +62,15 @@ export default app => {
             return
         }
 
+        // Can only be used when the post isn't locked
+        if (post.lockedDownAt) {
+            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+                text: 'Sorry, anonymous reactions can’t be sent while the post is locked.',
+                thread_ts: shortcut.message.thread_ts
+            })
+            return
+        }
+
         const targetMessage = await getMessage(client, shortcut.channel.id, shortcut.message.ts)
 
         const res = await client.conversations.open({ users: shortcut.user.id })
