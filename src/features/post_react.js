@@ -27,7 +27,23 @@ export default app => {
         }
 
         // Can only be used on a reply under a Prox post
-        const post = await Post.findOne({ postMessageId: shortcut.message.thread_ts })
+        // Attempt to get the very first reply in the thread
+        const { messages } = await client.conversations.replies({
+            channel: shortcut.channel.id,
+            ts: shortcut.message.thread_ts,
+            oldest: shortcut.message.thread_ts,
+            limit: 1
+        })
+        const sensitiveMessage = messages
+            .filter(message => message.bot_id === context.botId) // Must be from Prox
+            .filter(message => !message.username) // Must not be an anon reply
+            .filter(message => message.ts !== shortcut.message.thread_ts)[0] // Must not be the top-level post itself
+        const post = await Post.findOne({
+            $or: [
+                { postMessageId: shortcut.message.thread_ts }, // For normal posts
+                ...sensitiveMessage ? [{ postMessageId: sensitiveMessage.ts }] : [] // For posts that were marked as sensitive
+            ]
+        })
         if (!post) {
             await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
                 text: `You can only use this under posts made by <@${context.botUserId}>.`,
