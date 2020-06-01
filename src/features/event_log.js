@@ -1,6 +1,7 @@
 import { subtype } from '@slack/bolt'
 import config from '../config'
 import { channel } from '../middlewares'
+import Post from '../models/post'
 import { removeSpecialTags } from '../utils'
 import { sendMessage } from '../utils/slack'
 
@@ -20,7 +21,32 @@ export default app => {
             return
         }
 
+        // Check if the message was a post or a reply to one
+        const post = await Post.findOne({
+            $or: [
+                { postMessageId: deletedMessage.ts },
+                // Include only if it's a threaded message
+                ...deletedMessage.thread_ts
+                    ? [{ postMessageId: deletedMessage.thread_ts }]
+                    : []
+            ]
+        })
+
+        // We don't care about messages that we sent that aren't tied to a post
+        if (!post) {
+            return
+        }
+
+        let messageType
+        if (deletedMessage.ts === post.postMessageId) { // Was a post
+            messageType = 'post'
+        } else if (deletedMessage.thread_ts === post.postMessageId && deletedMessage.username) { // Was a reply
+            messageType = 'reply'
+        } else { // We don't care about notification messages
+            return
+        }
+
         const displayName = deletedMessage.user ? `<@${deletedMessage.user}>` : deletedMessage.username
-        await sendMessage(client, config.streamChannelId, `_A ${!deletedMessage.thread_ts ? 'post' : 'message'} from ${displayName} was deleted in <#${config.postChannelId}>:_\n>>> ${removeSpecialTags(deletedMessage.text)}`)
+        await sendMessage(client, config.streamChannelId, `_${messageType !== 'post' ? `A ${messageType} from ${displayName} under ` : ''}*#${post.postNumber}* was deleted:_\n>>> ${removeSpecialTags(deletedMessage.text)}`)
     })
 }
