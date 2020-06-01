@@ -47,6 +47,25 @@ export default app => {
         }
 
         const displayName = deletedMessage.user ? `<@${deletedMessage.user}>` : deletedMessage.username
-        await sendMessage(client, config.streamChannelId, `_${messageType !== 'post' ? `A ${messageType} from ${displayName} under ` : ''}*#${post.postNumber}* was deleted:_\n>>> ${removeSpecialTags(deletedMessage.text)}`)
+        // Attempt to get permalink of the post
+        let postPermalink
+        try {
+            const { permalink } = await client.chat.getPermalink({
+                channel: config.postChannelId,
+                message_ts: post.postMessageId
+            })
+            postPermalink = permalink
+        } catch (e) {
+            // We'll just not include a permalink
+        }
+        let postNumberText = `*#${post.postNumber}*`
+        if (postPermalink) {
+            postNumberText = `<${postPermalink}|${postNumberText}>`
+        }
+
+        await sendMessage(client, config.streamChannelId, {
+            text: `_${messageType !== 'post' ? `A ${messageType} from ${displayName} under ` : ''}${postNumberText} was deleted:_\n>>> ${removeSpecialTags(deletedMessage.text)}`,
+            unfurl_links: false
+        })
     })
 }
