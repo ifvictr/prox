@@ -13,7 +13,7 @@ export default app => {
         const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
-            await sendMessage(client, action.channel, {
+            await sendMessage(client, body.channel.id, {
                 text: ':rotating_light: Something went wrong. Reason: `submission not found`',
                 thread_ts: body.message_ts
             })
@@ -80,7 +80,7 @@ export default app => {
         const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
-            await sendMessage(client, action.channel, {
+            await sendMessage(client, body.channel.id, {
                 text: ':rotating_light: Something went wrong. Reason: `submission not found`',
                 thread_ts: body.message_ts
             })
@@ -122,7 +122,7 @@ export default app => {
         const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
-            await sendMessage(client, action.channel, {
+            await sendMessage(client, body.channel.id, {
                 text: ':rotating_light: Something went wrong. Reason: `submission not found`',
                 thread_ts: body.message_ts
             })
