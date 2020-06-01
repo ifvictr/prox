@@ -19,8 +19,7 @@ const init = async () => {
     // Initialize Slack app
     const app = new App({
         signingSecret: config.signingSecret,
-        token: config.botToken,
-        endpoints: '/api/messages'
+        token: config.botToken
     })
 
     // Load feature modules
