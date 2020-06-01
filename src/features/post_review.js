@@ -3,7 +3,7 @@ import config from '../config'
 import counter from '../counter'
 import Post from '../models/post'
 import { removeSpecialTags } from '../utils'
-import { sendMessage } from '../utils/slack'
+import { sendEphemeralMessage, sendMessage } from '../utils/slack'
 
 export default app => {
     app.action('post_approve', async ({ ack, action, body, client }) => {
@@ -13,10 +13,15 @@ export default app => {
         const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
-            await sendMessage(client, action.channel, {
+            await sendMessage(client, body.channel.id, {
                 text: ':rotating_light: Something went wrong. Reason: `submission not found`',
                 thread_ts: body.message_ts
             })
+            return
+        }
+
+        if (submission.approvedAt) {
+            await sendEphemeralMessage(client, body.channel.id, body.user.id, 'This submission has already been approved.')
             return
         }
 
@@ -75,10 +80,15 @@ export default app => {
         const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
-            await sendMessage(client, action.channel, {
+            await sendMessage(client, body.channel.id, {
                 text: ':rotating_light: Something went wrong. Reason: `submission not found`',
                 thread_ts: body.message_ts
             })
+            return
+        }
+
+        if (submission.deleteAt) {
+            await sendEphemeralMessage(client, body.channel.id, body.user.id, 'This submission has already been rejected.')
             return
         }
 
@@ -112,7 +122,7 @@ export default app => {
         const submission = await Post.findById(id)
         // Handle edge case where ticket isn't in database
         if (!submission) {
-            await sendMessage(client, action.channel, {
+            await sendMessage(client, body.channel.id, {
                 text: ':rotating_light: Something went wrong. Reason: `submission not found`',
                 thread_ts: body.message_ts
             })
