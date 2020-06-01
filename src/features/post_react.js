@@ -41,7 +41,10 @@ export default app => {
         const post = await Post.findOne({
             $or: [
                 { postMessageId: shortcut.message.thread_ts }, // For normal posts
-                ...sensitiveMessage ? [{ postMessageId: sensitiveMessage.ts }] : [] // For posts that were marked as sensitive
+                // For posts that were marked as sensitive
+                ...sensitiveMessage
+                    ? [{ postMessageId: sensitiveMessage.ts }]
+                    : []
             ]
         })
         if (!post) {
