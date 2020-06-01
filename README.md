@@ -21,11 +21,10 @@ For this app to work, you’ll need to register a Slack app with the appropriate
 ```bash
 MONGODB_URI=
 SLACK_CLIENT_BOT_TOKEN=
-SLACK_CLIENT_ID=
-SLACK_CLIENT_SECRET=
 SLACK_CLIENT_SIGNING_SECRET=
-SLACK_REVIEW_CHANNEL_ID=
 SLACK_POST_CHANNEL_ID=
+SLACK_REVIEW_CHANNEL_ID=
+SLACK_STREAM_CHANNEL_ID=
 ```
 
 ### Running the web server
