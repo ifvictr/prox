@@ -24,7 +24,7 @@ export default app => {
         const mainContent = `*#${newCount}:* ${removeSpecialTags(submission.body)}`
         let postMessage = await sendMessage(client, config.postChannelId,
             submission.markedSensitiveAt
-                ? `:warning: *#${newCount}:* _This post contains potentially sensitive content. Click on “View thread” to view it._`
+                ? `:warning: _*#${newCount}* contains potentially sensitive content. Click on *View thread* to reveal it._`
                 : mainContent)
 
         // If the post is marked sensitive, post in the thread and save that message ID instead.
