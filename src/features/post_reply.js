@@ -59,7 +59,7 @@ export default app => {
         })
 
         await sendMessage(client, config.streamChannelId, {
-            text: `_${displayName} (\`${senderIdHash.substring(0, 8)}\`) sent a reply to <${postPermalink}|*#${postNumber}*>:_\n>>> ${body}`,
+            text: `_${displayName} sent a reply to <${postPermalink}|*#${postNumber}*>:_\n>>> ${body}`,
             unfurl_links: false
         })
     })
