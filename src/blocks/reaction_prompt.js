@@ -14,7 +14,7 @@ export default ({
             type: 'section',
             text: {
                 type: 'mrkdwn',
-                text: `:wave: Hey! To send anonymous reactions to ${displayName}’s reply under <${postPermalink}|*#${postNumber}*> (also shown below), add the reactions to *this direct message* like you normally would, then click *Send reactions* when you’re done.`
+                text: `:wave: Hey! To add anonymous reactions to ${displayName}’s reply under <${postPermalink}|*#${postNumber}*> (also shown below), add the reactions to *this direct message* like you normally would, then click *Send reactions* when you’re done.`
             }
         },
         {

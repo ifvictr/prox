@@ -11,7 +11,7 @@ export default app => {
         // Can only be used in post channel
         if (shortcut.channel.id !== config.postChannelId) {
             await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
-                text: `You can only send anonymous reactions in <#${config.postChannelId}>.`,
+                text: `You can only add anonymous reactions to messages in <#${config.postChannelId}>.`,
                 thread_ts: shortcut.message.thread_ts
             })
             return
@@ -59,7 +59,7 @@ export default app => {
         const senderIdHash = hash(shortcut.user.id, post.salt)
         if (senderIdHash !== post.authorIdHash) {
             await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
-                text: 'Only the author of this post can use anonymous reactions.',
+                text: 'Only the author of this post can add anonymous reactions.',
                 thread_ts: shortcut.message.thread_ts
             })
             return
@@ -108,7 +108,7 @@ export default app => {
             return
         }
 
-        // Loop through all the reactions and then send them to the post channel
+        // Attempt to add all the reactions to the message
         const reactionPromises = promptMessage.reactions
             .filter(reaction => reaction.users.includes(body.user.id))
             .map(reaction => client.reactions.add({
