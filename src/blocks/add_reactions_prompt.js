@@ -1,6 +1,6 @@
 import { removeSpecialTags } from '../utils'
 
-export default ({
+export const AddReactionsPrompt = ({
     postNumber,
     postPermalink,
     targetMessageId,
