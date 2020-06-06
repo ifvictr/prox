@@ -1,4 +1,4 @@
-import { ReactionPrompt } from '../blocks'
+import { AddReactionsPrompt } from '../blocks'
 import config from '../config'
 import Post from '../models/post'
 import { hash } from '../utils'
@@ -82,7 +82,7 @@ export default app => {
             message_ts: post.postMessageId
         })
         await sendMessage(client, res.channel.id, {
-            blocks: ReactionPrompt({
+            blocks: AddReactionsPrompt({
                 postNumber: post.postNumber,
                 postPermalink,
                 targetMessageId: targetMessage.ts,
