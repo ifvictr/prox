@@ -5,7 +5,7 @@ import { hash } from '../utils'
 import { getMessage, sendEphemeralMessage, sendMessage } from '../utils/slack'
 
 export default app => {
-    app.shortcut('send_anon_reactions', async ({ ack, body, client, context, shortcut }) => {
+    app.shortcut('add_reactions', async ({ ack, body, client, context, shortcut }) => {
         await ack()
 
         // Can only be used in post channel
