@@ -5,7 +5,7 @@ import { hash } from '../utils'
 import { getMessage, sendEphemeralMessage, sendMessage } from '../utils/slack'
 
 export default app => {
-    app.shortcut('add_reactions', async ({ ack, body, client, context, shortcut }) => {
+    app.shortcut('reactions_add', async ({ ack, body, client, context, shortcut }) => {
         await ack()
 
         // Can only be used in post channel
@@ -98,7 +98,7 @@ export default app => {
         })
     })
 
-    app.action('reaction_send', async ({ ack, action, body, client }) => {
+    app.action('reactions_send', async ({ ack, action, body, client }) => {
         await ack()
 
         // Get the message we sent to the user
@@ -130,7 +130,7 @@ export default app => {
         }
     })
 
-    app.action('reaction_cancel', async ({ ack, body, client }) => {
+    app.action('reactions_cancel', async ({ ack, body, client }) => {
         await ack()
 
         await client.chat.delete({

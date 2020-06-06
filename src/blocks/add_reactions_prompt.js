@@ -29,7 +29,7 @@ export default ({
             elements: [
                 {
                     type: 'button',
-                    action_id: 'reaction_send',
+                    action_id: 'reactions_send',
                     style: 'primary',
                     text: {
                         type: 'plain_text',
@@ -39,7 +39,7 @@ export default ({
                 },
                 {
                     type: 'button',
-                    action_id: 'reaction_cancel',
+                    action_id: 'reactions_cancel',
                     text: {
                         type: 'plain_text',
                         text: 'Cancel'
