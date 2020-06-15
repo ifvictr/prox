@@ -1,7 +1,7 @@
-# Prox 🙈
+# 🙈 Prox
 
-Share anonymous confessions on Slack.
+Share anonymous confessions in Slack.
 
 ## License
 
-[MIT](LICENSE.txt)
+[MIT License](LICENSE.txt)
