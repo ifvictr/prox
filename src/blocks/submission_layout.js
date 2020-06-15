@@ -1,6 +1,6 @@
 import { removeSpecialTags } from '../utils'
 
-export default ({
+export const SubmissionLayout = ({
     id,
     isSensitive,
     postChannel,

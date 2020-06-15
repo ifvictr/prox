@@ -24,7 +24,7 @@ export const createSubmission = async (client, channel, event) => {
     return reviewMessage
 }
 
-export const getParentMessageId = async (client, channel, ts) => {
+export const getMessage = async (client, channel, ts) => {
     const { messages } = await client.conversations.replies({
         channel,
         ts,
@@ -36,7 +36,12 @@ export const getParentMessageId = async (client, channel, ts) => {
         return null
     }
 
-    return messages[0].thread_ts
+    return messages[0]
+}
+
+export const getParentMessageId = async (client, channel, ts) => {
+    const message = await getMessage(client, channel, ts)
+    return message?.thread_ts
 }
 
 export const isUserInChannel = async (client, user, channel) => {

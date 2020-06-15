@@ -40,6 +40,7 @@ export default app => {
         let messageType
         if (deletedMessage.ts === post.postMessageId) { // Was a post
             messageType = 'post'
+            await post.delete() // Sync post deletion to database
         } else if (deletedMessage.thread_ts === post.postMessageId && deletedMessage.username) { // Was a reply
             messageType = 'reply'
         } else { // We don't care about notification messages
