@@ -1,11 +1,14 @@
 import deleteSubcommand from './delete'
+import helpSubcommand from './help'
 import lockdownSubcommand from './lockdown'
 import { sendEphemeralMessage } from '../../utils/slack'
 
 export default app => {
     const subcommands = new Map([
         ['delete', deleteSubcommand],
-        ['lockdown', lockdownSubcommand]
+        ['help', helpSubcommand],
+        ['lockdown', lockdownSubcommand],
+        ['', helpSubcommand]
     ])
 
     app.command('/prox', async ({ ack, ...middlewareArgs }) => {
