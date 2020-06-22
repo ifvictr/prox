@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { capitalize } from '../utils'
 
 const PseudonymSchema = new mongoose.Schema({
     postId: {
@@ -11,10 +12,18 @@ const PseudonymSchema = new mongoose.Schema({
         required: true,
         immutable: true
     },
-    name: {
+    adjective: {
+        type: String,
+        required: true
+    },
+    noun: {
         type: String,
         required: true
     }
+})
+
+PseudonymSchema.virtual('name').get(function () {
+    return `${capitalize(this.adjective)} ${capitalize(this.noun)}`
 })
 
 export default mongoose.model('Pseudonym', PseudonymSchema)

@@ -3,7 +3,7 @@ import config from '../config'
 import { channelType, threaded } from '../middlewares'
 import Post from '../models/post'
 import Pseudonym from '../models/pseudonym'
-import { getIcon, hash, removeSpecialTags, toPrettyPseudonym } from '../utils'
+import { generatePseudonymSet, getIcon, hash, removeSpecialTags } from '../utils'
 import { sendEphemeralMessage, sendMessage } from '../utils/slack'
 
 const findOrCreatePseudonym = async (post, user) => {
@@ -16,10 +16,12 @@ const findOrCreatePseudonym = async (post, user) => {
 
     // Create pseudonym if it doesn't exist
     if (!pseudonym) {
+        const { adjective, noun } = generatePseudonymSet()
         pseudonym = new Pseudonym({
             postId: post.id,
             userIdHash,
-            name: toPrettyPseudonym(userIdHash)
+            adjective,
+            noun
         })
         await pseudonym.save()
     }
@@ -30,7 +32,7 @@ const findOrCreatePseudonym = async (post, user) => {
 const sendReplyToPost = async (client, say, user, post, message) => {
     const pseudonym = await findOrCreatePseudonym(post, user)
     const displayName = pseudonym.name + (pseudonym.userIdHash === post.authorIdHash ? ' (OP)' : '')
-    const icon = getIcon(pseudonym.userIdHash)
+    const icon = getIcon(pseudonym.noun)
     await sendMessage(client, config.postChannelId, {
         text: message,
         thread_ts: post.postMessageId,
