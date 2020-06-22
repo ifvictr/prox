@@ -2,17 +2,40 @@ import { ReplyModal } from '../blocks'
 import config from '../config'
 import { channelType, threaded } from '../middlewares'
 import Post from '../models/post'
-import { getIcon, hash, removeSpecialTags, toPrettyPseudonym } from '../utils'
+import Pseudonym from '../models/pseudonym'
+import { generatePseudonymSet, getIcon, hash, removeSpecialTags } from '../utils'
 import { sendEphemeralMessage, sendMessage } from '../utils/slack'
 
+const findOrCreatePseudonym = async (post, user) => {
+    const userIdHash = hash(user, post.salt)
+
+    let pseudonym = await Pseudonym.findOne({
+        postId: post.id,
+        userIdHash
+    })
+
+    // Create pseudonym if it doesn't exist
+    if (!pseudonym) {
+        const { adjective, noun } = generatePseudonymSet()
+        pseudonym = new Pseudonym({
+            postId: post.id,
+            userIdHash,
+            adjective,
+            noun
+        })
+        await pseudonym.save()
+    }
+
+    return pseudonym
+}
+
 const sendReplyToPost = async (client, say, user, post, message) => {
-    const senderIdHash = hash(user, post.salt)
-    const displayName = toPrettyPseudonym(senderIdHash) + (senderIdHash === post.authorIdHash ? ' (OP)' : '')
-    const icon = getIcon(senderIdHash)
+    const pseudonym = await findOrCreatePseudonym(post, user)
+    const displayName = pseudonym.name + (pseudonym.userIdHash === post.authorIdHash ? ' (OP)' : '')
     await sendMessage(client, config.postChannelId, {
         text: message,
         thread_ts: post.postMessageId,
-        icon_emoji: icon ? `:${icon}:` : null,
+        icon_emoji: getIcon(pseudonym.noun),
         username: displayName
     })
 

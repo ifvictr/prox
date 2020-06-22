@@ -6,10 +6,12 @@ import icons from '../data/icons.json'
 
 export const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1)
 
-export const getIcon = hash => {
-    const { animal } = getPseudonym(hash)
-    return icons[animal]
-}
+export const generatePseudonymSet = () => ({
+    adjective: pickRandom(adjectives),
+    noun: pickRandom(animals)
+})
+
+export const getIcon = noun => icons[noun] ? `:${icons[noun]}:` : null
 
 export const getIdFromUrl = inputUrl => {
     const url = new URL(inputUrl)
@@ -27,21 +29,13 @@ export const getIdFromUrl = inputUrl => {
     return formattedId
 }
 
-export const getPseudonym = hash => ({
-    adjective: adjectives[parseInt(hash.slice(0, 32), 16) % adjectives.length],
-    animal: animals[parseInt(hash.slice(32, hash.length), 16) % animals.length]
-})
-
 export const hash = (value, salt) => crypto.createHash('sha256')
     .update(value)
     .update(salt).digest('hex').toString()
+
+export const pickRandom = arr => arr[Math.floor(Math.random() * arr.length)]
 
 // Inserts zero-width non-joiner to prevent special tags like "@everyone" and "<!channel|channel>" from working
 export const removeSpecialTags = str => str
     .replace(/@(channel|everyone|here)/ig, '@\u200c$1')
     .replace(/\<\!(channel|everyone|here)\|(.*?)\>/ig, '<\u200c!$1|$2>')
-
-export const toPrettyPseudonym = hash => {
-    const { adjective, animal } = getPseudonym(hash)
-    return capitalize(adjective) + ' ' + capitalize(animal)
-}
