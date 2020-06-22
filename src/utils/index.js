@@ -11,7 +11,7 @@ export const generatePseudonymSet = () => ({
     noun: pickRandom(animals)
 })
 
-export const getIcon = noun => icons[noun]
+export const getIcon = noun => icons[noun] ? `:${icons[noun]}:` : null
 
 export const getIdFromUrl = inputUrl => {
     const url = new URL(inputUrl)

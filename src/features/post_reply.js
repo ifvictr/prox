@@ -32,11 +32,10 @@ const findOrCreatePseudonym = async (post, user) => {
 const sendReplyToPost = async (client, say, user, post, message) => {
     const pseudonym = await findOrCreatePseudonym(post, user)
     const displayName = pseudonym.name + (pseudonym.userIdHash === post.authorIdHash ? ' (OP)' : '')
-    const icon = getIcon(pseudonym.noun)
     await sendMessage(client, config.postChannelId, {
         text: message,
         thread_ts: post.postMessageId,
-        icon_emoji: icon ? `:${icon}:` : null,
+        icon_emoji: getIcon(pseudonym.noun),
         username: displayName
     })
 
