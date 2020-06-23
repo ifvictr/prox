@@ -27,14 +27,14 @@
     "@slack/bolt": "^2.1.1",
     "dotenv": "^8.2.0",
     "is-url": "^1.2.4",
-    "mongoose": "^5.9.6",
+    "mongoose": "^5.9.20",
     "mongoose-delete": "^0.5.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.9.0",
-    "nodemon": "^2.0.2"
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.10.3",
+    "@babel/node": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "nodemon": "^2.0.4"
   }
 }
