@@ -36,7 +36,8 @@ All shortcuts can be found under *More actions* → *More message shortcuts*.
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `I also noticed that you’re a reviewer. Here’s a list of available commands along with their parameters:\n
+                    text: `:mag: *Reviewer Tools*\n
+Here’s a list of available commands along with their parameters:\n
 - *\`${command} delete <post number|url> [hard]\`:* Deletes the specified post or reply comment from the post channel by replacing the message contents. If \`hard\` is specified, the message will be completely deleted.
 - *\`${command} lockdown <post number>\`:* Toggles the lockdown status of a post.
                     `
