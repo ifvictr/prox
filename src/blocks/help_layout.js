@@ -9,7 +9,7 @@ export const HelpLayout = ({
             text: `:wave: Hey, I’m Prox! Here are the basics to get you started:\n
 1. DM me to submit a post! It’ll be sent to a channel for review, where the only thing the reviewers see is your message. No information about you is ever shown.
 2. To reply anonymously to a post, DM me in this format: \`<post number>: <your message here>\`. If you wanted to reply with “hello” to post *#16*, send \`16: hello\`.
-3. Run *\`${command}\`* to see this message up again.
+3. Run *\`${command}\`* to see this message again.
             `
         }
     },
