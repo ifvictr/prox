@@ -1,4 +1,4 @@
-import { SubmissionLayout } from '../blocks'
+import { AddWarningModal, SubmissionLayout } from '../blocks'
 import config from '../config'
 import counter from '../counter'
 import Post from '../models/post'
@@ -29,7 +29,9 @@ export default app => {
         const mainContent = `*#${newCount}:* ${removeSpecialTags(submission.body)}`
         let postMessage = await sendMessage(client, config.postChannelId,
             submission.markedSensitiveAt
-                ? `:warning: _*#${newCount}* contains potentially sensitive content. Click on *View thread* to reveal it._`
+                ? `:warning: *#${newCount}* includes potentially sensitive content. Here’s the warning from reviewers:
+> ${removeSpecialTags(submission.warningMessage)}
+If you still want to read it, click on *View thread*.`
                 : mainContent)
 
         // If the post is marked sensitive, post in the thread and save that message ID instead.
@@ -129,12 +131,23 @@ export default app => {
             return
         }
 
-        submission.markedSensitiveAt = submission.markedSensitiveAt ? null : Date.now()
+        // If the user is trying to add a warning, open a modal instead
+        if (!submission.markedSensitiveAt) {
+            await client.views.open({
+                trigger_id: body.trigger_id,
+                view: AddWarningModal({ postId: submission.id })
+            })
+            return
+        }
+
+        submission.markedSensitiveAt = null
+        submission.warningMessage = null
         await submission.save()
 
+        // Update the review message
         const props = {
             id,
-            isSensitive: Boolean(submission.markedSensitiveAt),
+            isSensitive: false,
             status: 'waiting',
             text: submission.body
         }
@@ -142,6 +155,54 @@ export default app => {
             channel: config.reviewChannelId,
             ts: submission.reviewMessageId,
             blocks: SubmissionLayout(props)
+        })
+
+        // Send update in thread
+        await sendMessage(client, config.reviewChannelId, {
+            text: `_<@${body.user.id}> removed the warning._`,
+            thread_ts: submission.reviewMessageId
+        })
+    })
+
+    app.view('add_warning', async ({ ack, body, client, view }) => {
+        await ack()
+
+        const { postId } = JSON.parse(view.private_metadata)
+        const warningMessage = view.state.values.warning_input.input_warning.value
+
+        const submission = await Post.findById(postId)
+        // Handle edge case where ticket isn't in database
+        if (!submission) {
+            await sendMessage(client, body.channel.id, {
+                text: ':rotating_light: Something went wrong. Reason: `submission not found`',
+                thread_ts: body.message_ts
+            })
+            return
+        }
+
+        submission.markedSensitiveAt = Date.now()
+        submission.warningMessage = warningMessage
+        await submission.save()
+
+        // Update the review message
+        const props = {
+            id: postId,
+            isSensitive: true,
+            status: 'waiting',
+            text: submission.body,
+            user: body.user.id,
+            warningMessage
+        }
+        await client.chat.update({
+            channel: config.reviewChannelId,
+            ts: submission.reviewMessageId,
+            blocks: SubmissionLayout(props)
+        })
+
+        // Send update in thread
+        await sendMessage(client, config.reviewChannelId, {
+            text: `_<@${body.user.id}> added a warning:_\n>>> ${removeSpecialTags(warningMessage)}`,
+            thread_ts: submission.reviewMessageId
         })
     })
 }
