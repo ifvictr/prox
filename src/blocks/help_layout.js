@@ -13,6 +13,20 @@ export const HelpLayout = ({
             `
         }
     },
+    {
+        type: 'divider'
+    },
+    {
+        type: 'section',
+        text: {
+            type: 'mrkdwn',
+            text: `:zap: *Shortcuts*\n
+- *Add anonymous reactions:* Send reactions to a message under a post. Only works if you created it.
+- *Send anonymous reply:* Send a reply to a post without having to switch to DM.\n
+All shortcuts can be found under *More actions* → *More message shortcuts*.
+            `
+        }
+    },
     ...showReviewerFeatures
         ? [
             {
