@@ -8,7 +8,8 @@ export const SubmissionLayout = ({
     postPermalink,
     status,
     text,
-    user
+    user,
+    warningMessage
 }) => {
     const displayName = `<@${user}>` || 'You’ve'
     return [
@@ -31,39 +32,49 @@ export const SubmissionLayout = ({
             }
         },
         ...status === 'waiting'
-            ? [{
-                type: 'actions',
-                elements: [
-                    {
-                        type: 'button',
-                        action_id: 'post_approve',
-                        style: 'primary',
+            ? [
+                ...isSensitive
+                    ? [{
+                        type: 'section',
                         text: {
-                            type: 'plain_text',
-                            text: 'Approve'
+                            type: 'mrkdwn',
+                            text: `:warning: A warning was added by <@${user}>:\n> ${removeSpecialTags(warningMessage)}`
+                        }
+                    }]
+                    : [],
+                {
+                    type: 'actions',
+                    elements: [
+                        {
+                            type: 'button',
+                            action_id: 'post_approve',
+                            style: 'primary',
+                            text: {
+                                type: 'plain_text',
+                                text: 'Approve'
+                            },
+                            value: id
                         },
-                        value: id
-                    },
-                    {
-                        type: 'button',
-                        action_id: 'post_reject',
-                        text: {
-                            type: 'plain_text',
-                            text: 'Reject'
+                        {
+                            type: 'button',
+                            action_id: 'post_reject',
+                            text: {
+                                type: 'plain_text',
+                                text: 'Reject'
+                            },
+                            value: id
                         },
-                        value: id
-                    },
-                    {
-                        type: 'button',
-                        action_id: 'post_toggle_sensitive',
-                        text: {
-                            type: 'plain_text',
-                            text: `${isSensitive ? ':warning: Unmark' : 'Mark'} as sensitive`
-                        },
-                        value: id
-                    }
-                ]
-            }]
+                        {
+                            type: 'button',
+                            action_id: 'post_toggle_sensitive',
+                            text: {
+                                type: 'plain_text',
+                                text: `${isSensitive ? ':heavy_minus_sign: Remove' : ':heavy_plus_sign: Add'} warning`
+                            },
+                            value: id
+                        }
+                    ]
+                }]
             : []
     ]
 }
