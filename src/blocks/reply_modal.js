@@ -1,5 +1,6 @@
 export const ReplyModal = ({
     postNumber,
+    shouldPrepopulate,
     user,
     username
 }) => {
@@ -26,7 +27,7 @@ export const ReplyModal = ({
                 element: {
                     type: 'plain_text_input',
                     action_id: 'input_reply',
-                    initial_value: displayName + ' ',
+                    initial_value: shouldPrepopulate ? displayName + ' ' : '',
                     multiline: true
                 }
             },

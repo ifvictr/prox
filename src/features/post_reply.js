@@ -156,6 +156,7 @@ export default app => {
             trigger_id: shortcut.trigger_id,
             view: ReplyModal({
                 postNumber: post.postNumber,
+                shouldPrepopulate: shortcut.message.user !== context.botUserId,
                 user: shortcut.message.user,
                 username: isAuthor ? 'OP' : displayName
             })
