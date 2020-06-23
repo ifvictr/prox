@@ -1,34 +1,34 @@
 import config from '../../config'
 import Post from '../../models/post'
 import { removeSpecialTags } from '../../utils'
-import { getParentMessageId, isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils/slack'
+import { getParentMessageId, isUserInChannel, sendMessage } from '../../utils/slack'
 
 // /prox lock <post number>
-export default async ({ client, command }, args) => {
+export default async ({ client, command, respond }, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(client, command.user_id, config.reviewChannelId))) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You need to be a reviewer to use this command.')
+        await respond('You need to be a reviewer to use this command.')
         return
     }
 
     if (!args[1]) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Please specify a post number.')
+        await respond('Please specify a post number.')
         return
     }
 
     if (isNaN(args[1])) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'The input must be a post number.')
+        await respond('The input must be a post number.')
         return
     }
 
     const post = await Post.findOne({ postNumber: args[1] })
     if (!post) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'The specified post couldn’t be found.')
+        await respond('The specified post couldn’t be found.')
         return
     }
 
     if (post.lockedDownAt) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'This post is already locked.')
+        await respond('This post is already locked.')
         return
     }
 
@@ -52,7 +52,7 @@ export default async ({ client, command }, args) => {
     })
 
     // Notify the command sender
-    await sendEphemeralMessage(client, command.channel_id, command.user_id, ':+1: Post locked.')
+    await respond(':+1: Post locked.')
 
     // Log status change
     const { permalink: postPermalink } = await client.chat.getPermalink({

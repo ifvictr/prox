@@ -2,15 +2,15 @@ import { AddReactionsPrompt } from '../blocks'
 import config from '../config'
 import Post from '../models/post'
 import { hash } from '../utils'
-import { getMessage, sendEphemeralMessage, sendMessage } from '../utils/slack'
+import { getMessage, sendMessage } from '../utils/slack'
 
 export default app => {
-    app.shortcut('reactions_add', async ({ ack, body, client, context, shortcut }) => {
+    app.shortcut('reactions_add', async ({ ack, body, client, context, respond, shortcut }) => {
         await ack()
 
         // Can only be used in post channel
         if (shortcut.channel.id !== config.postChannelId) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: `You can only add anonymous reactions to messages in <#${config.postChannelId}>.`,
                 thread_ts: shortcut.message.thread_ts
             })
@@ -19,7 +19,7 @@ export default app => {
 
         // Can only be used in threaded replies
         if (!shortcut.message.thread_ts || shortcut.message.ts === shortcut.message.thread_ts) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: 'You can only use this on threaded messages.',
                 thread_ts: shortcut.message.thread_ts
             })
@@ -48,7 +48,7 @@ export default app => {
             ]
         })
         if (!post) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: `You can only use this under posts made by <@${context.botUserId}>.`,
                 thread_ts: shortcut.message.thread_ts
             })
@@ -58,7 +58,7 @@ export default app => {
         // Can only be used by the post's author
         const senderIdHash = hash(shortcut.user.id, post.salt)
         if (senderIdHash !== post.authorIdHash) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: 'Only the author of this post can add anonymous reactions.',
                 thread_ts: shortcut.message.thread_ts
             })
@@ -67,7 +67,7 @@ export default app => {
 
         // Can only be used when the post isn't locked
         if (post.lockedDownAt) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: 'Sorry, anonymous reactions can’t be sent while the post is locked.',
                 thread_ts: shortcut.message.thread_ts
             })
@@ -91,19 +91,19 @@ export default app => {
             })
         })
 
-        await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+        await respond({
             text: `Check your DMs with <@${context.botUserId}> for further instructions.`,
             thread_ts: body.message.thread_ts
         })
     })
 
-    app.action('reactions_send', async ({ ack, action, body, client }) => {
+    app.action('reactions_send', async ({ ack, action, body, client, respond }) => {
         await ack()
 
         // Get the message we sent to the user
         const promptMessage = await getMessage(client, body.channel.id, body.message.ts)
         if (!promptMessage.reactions) {
-            await sendEphemeralMessage(client, body.channel.id, body.user.id, 'You haven’t added any reactions to the message yet.')
+            await respond('You haven’t added any reactions to the message yet.')
             return
         }
 
@@ -120,7 +120,7 @@ export default app => {
             await Promise.all(reactionPromises)
             await sendMessage(client, body.channel.id, ':+1: Your reactions have been sent!')
         } catch (e) {
-            await sendEphemeralMessage(client, body.channel.id, body.user.id, `Failed to send a reaction. Reason: \`${e.data.error}\``)
+            await respond(`Failed to send a reaction. Reason: \`${e.data.error}\``)
         } finally {
             await client.chat.delete({
                 channel: body.channel.id,
