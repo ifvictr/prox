@@ -45,7 +45,7 @@ const generateUniquePseudonymSet = async post => {
     return pseudonymSet
 }
 
-const sendReplyToPost = async (client, say, user, post, message) => {
+const sendReplyToPost = async (client, user, post, message, shouldNotifyUser = true) => {
     const pseudonym = await findOrCreatePseudonym(post, user)
     const displayName = pseudonym.name + (pseudonym.userIdHash === post.authorIdHash ? ' (OP)' : '')
     await sendMessage(client, config.postChannelId, {
@@ -59,10 +59,14 @@ const sendReplyToPost = async (client, say, user, post, message) => {
         channel: config.postChannelId,
         message_ts: post.postMessageId
     })
-    await say({
-        text: `:ok_hand: Your reply to <${postPermalink}|*#${post.postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`,
-        unfurl_links: false
-    })
+
+    if (shouldNotifyUser) {
+        const { channel: userDM } = await client.conversations.open({ users: user })
+        await sendMessage(client, userDM.id, {
+            text: `:ok_hand: Your reply to <${postPermalink}|*#${post.postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`,
+            unfurl_links: false
+        })
+    }
 
     await sendMessage(client, config.streamChannelId, {
         text: `_${displayName} sent a reply to <${postPermalink}|*#${post.postNumber}*>:_\n>>> ${message}`,
@@ -104,7 +108,7 @@ export default app => {
             return
         }
 
-        await sendReplyToPost(client, say, event.user, post, replyBody)
+        await sendReplyToPost(client, event.user, post, replyBody)
     })
 
     app.shortcut('reply_send', async ({ ack, client, context, shortcut }) => {
@@ -180,7 +184,7 @@ export default app => {
         })
     })
 
-    app.view('reply', async ({ ack, body, client, say, view }) => {
+    app.view('reply', async ({ ack, body, client, view }) => {
         await ack()
 
         const { postNumber } = JSON.parse(view.private_metadata)
@@ -205,6 +209,6 @@ export default app => {
             return
         }
 
-        await sendReplyToPost(client, say, body.user.id, post, replyBody)
+        await sendReplyToPost(client, body.user.id, post, replyBody, false)
     })
 }
