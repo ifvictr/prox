@@ -2,6 +2,7 @@ import deleteSubcommand from './delete'
 import helpSubcommand from './help'
 import lockSubcommand from './lock'
 import unlockSubcommand from './unlock'
+import versionSubcommand from './version'
 import { sendEphemeralMessage } from '../../utils/slack'
 
 export default app => {
@@ -10,6 +11,7 @@ export default app => {
         ['help', helpSubcommand],
         ['lock', lockSubcommand],
         ['unlock', unlockSubcommand],
+        ['version', versionSubcommand],
         ['', helpSubcommand]
     ])
 
