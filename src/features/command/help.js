@@ -1,11 +1,11 @@
 import { HelpLayout } from '../../blocks'
 import config from '../../config'
-import { isUserInChannel, sendEphemeralMessage } from '../../utils/slack'
+import { isUserInChannel } from '../../utils/slack'
 
 // /prox help
-export default async ({ client, command }) => {
+export default async ({ client, command, respond }) => {
     const isReviewer = await isUserInChannel(client, command.user_id, config.reviewChannelId)
-    await sendEphemeralMessage(client, command.channel_id, command.user_id, {
+    await respond({
         blocks: HelpLayout({
             command: command.command,
             showReviewerFeatures: isReviewer

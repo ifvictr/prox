@@ -2,18 +2,18 @@ import isUrl from 'is-url'
 import config from '../../config'
 import Post from '../../models/post'
 import { getIdFromUrl } from '../../utils'
-import { isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils/slack'
+import { isUserInChannel, sendMessage } from '../../utils/slack'
 
 // /prox delete <post number|url> [hard]
-export default async ({ client, command }, args) => {
+export default async ({ client, command, respond }, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(client, command.user_id, config.reviewChannelId))) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You need to be a reviewer to use this command.')
+        await respond('You need to be a reviewer to use this command.')
         return
     }
 
     if (!args[1]) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Please specify a post number or message URL.')
+        await respond('Please specify a post number or message URL.')
         return
     }
 
@@ -23,7 +23,7 @@ export default async ({ client, command }, args) => {
     if (isUrl(args[1])) { // Is URL?
         messageId = getIdFromUrl(args[1])
         if (!messageId) {
-            await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Couldn’t extract a message ID from the given URL.')
+            await respond('Couldn’t extract a message ID from the given URL.')
             return
         }
 
@@ -32,13 +32,13 @@ export default async ({ client, command }, args) => {
     } else if (!isNaN(args[1])) { // Is post number?
         post = await Post.findOne({ postNumber: args[1] })
         if (!post) {
-            await sendEphemeralMessage(client, command.channel_id, command.user_id, 'The specified post couldn’t be found.')
+            await respond('The specified post couldn’t be found.')
             return
         }
 
         messageId = post.postMessageId
     } else { // Is invalid input
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You must specify either a post number or message URL.')
+        await respond('You must specify either a post number or message URL.')
         return
     }
 
@@ -62,8 +62,8 @@ export default async ({ client, command }, args) => {
             await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> deleted *#${post.postNumber}*._`)
         }
 
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, `:+1: ${post ? 'Post' : 'Message'} deleted.`)
+        await respond(`:+1: ${post ? 'Post' : 'Message'} deleted.`)
     } catch (e) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, `Failed to delete. Reason: \`${e.data.error}\``)
+        await respond(`Failed to delete. Reason: \`${e.data.error}\``)
     }
 }

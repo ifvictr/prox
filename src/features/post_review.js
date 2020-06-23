@@ -3,10 +3,10 @@ import config from '../config'
 import counter from '../counter'
 import Post from '../models/post'
 import { removeSpecialTags } from '../utils'
-import { sendEphemeralMessage, sendMessage } from '../utils/slack'
+import { sendMessage } from '../utils/slack'
 
 export default app => {
-    app.action('post_approve', async ({ ack, action, body, client }) => {
+    app.action('post_approve', async ({ ack, action, body, client, respond }) => {
         await ack()
 
         const id = action.value
@@ -21,7 +21,11 @@ export default app => {
         }
 
         if (submission.approvedAt) {
-            await sendEphemeralMessage(client, body.channel.id, body.user.id, 'This submission has already been approved.')
+            await respond({
+                response_type: 'ephemeral',
+                text: 'This submission has already been approved.',
+                replace_original: false
+            })
             return
         }
 
@@ -75,7 +79,7 @@ If you still want to read it, click on *View thread*.`
         })
     })
 
-    app.action('post_reject', async ({ ack, action, body, client }) => {
+    app.action('post_reject', async ({ ack, action, body, client, respond }) => {
         await ack()
 
         const id = action.value
@@ -90,7 +94,11 @@ If you still want to read it, click on *View thread*.`
         }
 
         if (submission.deleteAt) {
-            await sendEphemeralMessage(client, body.channel.id, body.user.id, 'This submission has already been rejected.')
+            await respond({
+                response_type: 'ephemeral',
+                text: 'This submission has already been rejected.',
+                replace_original: false
+            })
             return
         }
 

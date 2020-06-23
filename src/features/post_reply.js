@@ -119,12 +119,12 @@ export default app => {
         await sendReplyToPost(client, event.user, post, replyBody)
     })
 
-    app.shortcut('reply_send', async ({ ack, client, context, shortcut }) => {
+    app.shortcut('reply_send', async ({ ack, client, context, respond, shortcut }) => {
         await ack()
 
         // Can only be used in post channel
         if (shortcut.channel.id !== config.postChannelId) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: `You can only send anonymous replies to messages in <#${config.postChannelId}>.`,
                 thread_ts: shortcut.message.thread_ts
             })
@@ -154,7 +154,7 @@ export default app => {
             ]
         })
         if (!post) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: `You can only use this under posts made by <@${context.botUserId}>.`,
                 thread_ts: shortcut.message.thread_ts
             })
@@ -163,7 +163,7 @@ export default app => {
 
         // Stop if the post is deleted
         if (post.deletedAt) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: 'Sorry, anonymous replies can’t be sent to deleted posts.',
                 thread_ts: shortcut.message.thread_ts
             })
@@ -172,7 +172,7 @@ export default app => {
 
         // Stop if the post is locked
         if (post.lockedDownAt) {
-            await sendEphemeralMessage(client, shortcut.channel.id, shortcut.user.id, {
+            await respond({
                 text: 'Sorry, anonymous replies can’t be sent while the post is locked.',
                 thread_ts: shortcut.message.thread_ts
             })
