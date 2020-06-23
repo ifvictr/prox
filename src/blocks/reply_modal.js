@@ -10,7 +10,7 @@ export const ReplyModal = ({
         callback_id: 'reply',
         title: {
             type: 'plain_text',
-            text: 'Reply to post'
+            text: 'Prox'
         },
         submit: {
             type: 'plain_text',
