@@ -16,7 +16,7 @@ const findOrCreatePseudonym = async (post, user) => {
 
     // Create pseudonym if it doesn't exist
     if (!pseudonym) {
-        const { adjective, noun } = generatePseudonymSet()
+        const { adjective, noun } = await generateUniquePseudonymSet(post)
         pseudonym = new Pseudonym({
             postId: post.id,
             userIdHash,
@@ -27,6 +27,22 @@ const findOrCreatePseudonym = async (post, user) => {
     }
 
     return pseudonym
+}
+
+const generateUniquePseudonymSet = async post => {
+    const pseudonymSet = generatePseudonymSet()
+
+    // Check its existence and regenerate if someone else has that name already
+    const filter = {
+        postId: post.id,
+        adjective: pseudonymSet.adjective,
+        noun: pseudonymSet.noun
+    }
+    if (await Pseudonym.exists(filter)) {
+        return generateUniquePseudonymSet(post)
+    }
+
+    return pseudonymSet
 }
 
 const sendReplyToPost = async (client, say, user, post, message) => {
