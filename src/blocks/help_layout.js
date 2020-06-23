@@ -1,7 +1,7 @@
 export const HelpLayout = ({
-    command,
+    command = '/prox',
     showReviewerFeatures = false
-}) => ([
+} = {}) => ([
     {
         type: 'section',
         text: {
