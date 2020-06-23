@@ -105,9 +105,10 @@ export default app => {
 
         // Can only be used on a reply under a Prox post
         // Attempt to get the very first reply in the thread
+        const parentMessageId = shortcut.message.thread_ts || shortcut.message.ts
         const { messages } = await client.conversations.replies({
             channel: shortcut.channel.id,
-            ts: shortcut.message.thread_ts,
+            ts: parentMessageId,
             oldest: shortcut.message.thread_ts,
             limit: 1
         })
@@ -117,7 +118,7 @@ export default app => {
             .filter(message => message.ts !== shortcut.message.thread_ts)[0] // Must not be the top-level post itself
         const post = await Post.findOne({
             $or: [
-                { postMessageId: shortcut.message.thread_ts }, // For normal posts
+                { postMessageId: parentMessageId }, // For normal posts
                 // For posts that were marked as sensitive
                 ...sensitiveMessage
                     ? [{ postMessageId: sensitiveMessage.ts }]
