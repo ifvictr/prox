@@ -7,7 +7,7 @@ import { getParentMessageId, isUserInChannel, sendEphemeralMessage, sendMessage 
 export default async ({ client, command }, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(client, command.user_id, config.reviewChannelId))) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You don’t have permission to run this command.')
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You need to be a reviewer to use this command.')
         return
     }
 
@@ -17,7 +17,7 @@ export default async ({ client, command }, args) => {
     }
 
     if (isNaN(args[1])) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Input must be a post number.')
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'The input must be a post number.')
         return
     }
 
@@ -52,7 +52,7 @@ export default async ({ client, command }, args) => {
     })
 
     // Notify the command sender
-    await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Post locked.')
+    await sendEphemeralMessage(client, command.channel_id, command.user_id, ':+1: Post locked.')
 
     // Log status change
     const { permalink: postPermalink } = await client.chat.getPermalink({

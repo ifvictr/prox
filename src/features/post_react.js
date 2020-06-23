@@ -119,9 +119,9 @@ export default app => {
 
         try {
             await Promise.all(reactionPromises)
-            await sendMessage(client, body.channel.id, ':+1: Your reactions have been sent.')
+            await sendMessage(client, body.channel.id, ':+1: Your reactions have been sent!')
         } catch (e) {
-            await sendEphemeralMessage(client, body.channel.id, body.user.id, `Failed to react. Reason: \`${e.data.error}\``)
+            await sendEphemeralMessage(client, body.channel.id, body.user.id, `Failed to send a reaction. Reason: \`${e.data.error}\``)
         } finally {
             await client.chat.delete({
                 channel: body.channel.id,

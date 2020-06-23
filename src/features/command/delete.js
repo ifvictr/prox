@@ -8,7 +8,7 @@ import { isUserInChannel, sendEphemeralMessage, sendMessage } from '../../utils/
 export default async ({ client, command }, args) => {
     // Check if the user is part of the review channel
     if (!(await isUserInChannel(client, command.user_id, config.reviewChannelId))) {
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You don’t have permission to run this command.')
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You need to be a reviewer to use this command.')
         return
     }
 
@@ -38,7 +38,7 @@ export default async ({ client, command }, args) => {
 
         messageId = post.postMessageId
     } else { // Is invalid input
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'Input must be a post number or message URL.')
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, 'You must specify either a post number or message URL.')
         return
     }
 
@@ -62,7 +62,7 @@ export default async ({ client, command }, args) => {
             await sendMessage(client, config.streamChannelId, `_<@${command.user_id}> deleted *#${post.postNumber}*._`)
         }
 
-        await sendEphemeralMessage(client, command.channel_id, command.user_id, `${post ? 'Post' : 'Message'} deleted.`)
+        await sendEphemeralMessage(client, command.channel_id, command.user_id, `:+1: ${post ? 'Post' : 'Message'} deleted.`)
     } catch (e) {
         await sendEphemeralMessage(client, command.channel_id, command.user_id, `Failed to delete. Reason: \`${e.data.error}\``)
     }
