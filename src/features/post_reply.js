@@ -61,8 +61,7 @@ const sendReplyToPost = async (client, user, post, message, shouldNotifyUser = t
     })
 
     if (shouldNotifyUser) {
-        const { channel: userDM } = await client.conversations.open({ users: user })
-        await sendMessage(client, userDM.id, {
+        await sendMessage(client, user, {
             text: `:ok_hand: Your reply to <${postPermalink}|*#${post.postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`,
             unfurl_links: false
         })

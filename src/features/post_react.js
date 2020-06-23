@@ -76,12 +76,11 @@ export default app => {
 
         const targetMessage = await getMessage(client, shortcut.channel.id, shortcut.message.ts)
 
-        const res = await client.conversations.open({ users: shortcut.user.id })
         const { permalink: postPermalink } = await client.chat.getPermalink({
             channel: config.postChannelId,
             message_ts: post.postMessageId
         })
-        await sendMessage(client, res.channel.id, {
+        await sendMessage(client, shortcut.user.id, {
             blocks: AddReactionsPrompt({
                 postNumber: post.postNumber,
                 postPermalink,
