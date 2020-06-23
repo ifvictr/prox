@@ -1,13 +1,15 @@
 import deleteSubcommand from './delete'
 import helpSubcommand from './help'
-import lockdownSubcommand from './lockdown'
+import lockSubcommand from './lock'
+import unlockSubcommand from './unlock'
 import { sendEphemeralMessage } from '../../utils/slack'
 
 export default app => {
     const subcommands = new Map([
         ['delete', deleteSubcommand],
         ['help', helpSubcommand],
-        ['lockdown', lockdownSubcommand],
+        ['lock', lockSubcommand],
+        ['unlock', unlockSubcommand],
         ['', helpSubcommand]
     ])
 
