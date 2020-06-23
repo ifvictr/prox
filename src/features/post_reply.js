@@ -46,12 +46,17 @@ const generateUniquePseudonymSet = async post => {
 }
 
 const sendReplyToPost = async (client, user, post, message, shouldNotifyUser = true) => {
+    const hasRepliedBefore = await Pseudonym.exists({
+        postId: post.id,
+        userIdHash: hash(user, post.salt)
+    })
     const pseudonym = await findOrCreatePseudonym(post, user)
     const displayName = pseudonym.name + (pseudonym.userIdHash === post.authorIdHash ? ' (OP)' : '')
+    const icon = getIcon(pseudonym.noun)
     await sendMessage(client, config.postChannelId, {
         text: message,
         thread_ts: post.postMessageId,
-        icon_emoji: getIcon(pseudonym.noun),
+        icon_emoji: icon,
         username: displayName
     })
 
@@ -62,7 +67,11 @@ const sendReplyToPost = async (client, user, post, message, shouldNotifyUser = t
 
     if (shouldNotifyUser) {
         await sendMessage(client, user, {
-            text: `:ok_hand: Your reply to <${postPermalink}|*#${post.postNumber}*> has been sent. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`,
+            text: `:ok_hand: Your reply to <${postPermalink}|*#${post.postNumber}*> has been sent${
+                hasRepliedBefore
+                    ? '.'
+                    : ` as ${icon ? `${icon} ` : ''}*${pseudonym.name}*. To stay notified about new replies, just click *More actions* → *Follow thread* on the post.`
+                }`,
             unfurl_links: false
         })
     }
