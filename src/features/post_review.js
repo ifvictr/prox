@@ -59,7 +59,7 @@ If you still want to read it, click on *View thread*.`
         })
         const props = {
             id,
-            isSensitive: Boolean(submission.markedSensitiveAt),
+            isSensitive: !!submission.markedSensitiveAt,
             postChannel: config.postChannelId,
             postNumber: submission.postNumber,
             postPermalink,
@@ -106,7 +106,7 @@ If you still want to read it, click on *View thread*.`
 
         const props = {
             id,
-            isSensitive: Boolean(submission.markedSensitiveAt),
+            isSensitive: !!submission.markedSensitiveAt,
             postChannel: config.postChannelId,
             postNumber: submission.postNumber,
             status: 'rejected',
