@@ -112,13 +112,13 @@ export default app => {
 
         // Stop if the post is deleted
         if (post.deletedAt) {
-            await say(`:skull: This post has been deleted. Your reply will not be sent.`)
+            await say(':skull: This post has been deleted. Your reply will not be sent.')
             return
         }
 
         // Stop if the post is locked
         if (post.lockedDownAt) {
-            await say(`:lock: This post is currently locked. Your reply will not be sent.`)
+            await say(':lock: This post is currently locked. Your reply will not be sent.')
             return
         }
 
