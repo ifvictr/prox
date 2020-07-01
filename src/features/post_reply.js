@@ -29,17 +29,23 @@ const findOrCreatePseudonym = async (post, user) => {
     return pseudonym
 }
 
-const generateUniquePseudonymSet = async post => {
+const generateUniquePseudonymSet = async (post, preferUniqueNoun = true, attempts = 5) => {
     const pseudonymSet = generatePseudonymSet()
+
+    // Out of attempts—just return whatever was generated
+    if (attempts < 1) {
+        return pseudonymSet
+    }
 
     // Check its existence and regenerate if someone else has that name already
     const filter = {
         postId: post.id,
-        adjective: pseudonymSet.adjective,
+        // Include the adjective in the filter if there's no preference for a unique noun, or if we've run out of attempts
+        ...!preferUniqueNoun && { adjective: pseudonymSet.adjective },
         noun: pseudonymSet.noun
     }
     if (await Pseudonym.exists(filter)) {
-        return generateUniquePseudonymSet(post)
+        return generateUniquePseudonymSet(post, preferUniqueNoun, attempts - 1)
     }
 
     return pseudonymSet
