@@ -93,6 +93,11 @@ export default app => {
     // Matches "1337: hello" and "#1337: hello"
     const replyPattern = /^(#*)\d+:(\s|$)/
     app.message(channelType('im'), threaded(false), replyPattern, async ({ client, event, say }) => {
+        if ('attachments' in event || 'files' in event) {
+            await say(':confused: Replies with files and attachments aren’t supported.')
+            return
+        }
+
         const args = event.text.split(/\s/)
         const postNumber = args[0].slice(0, -1).match(/\d+/g) // Remove the colon, then try to match a number
         const replyBody = removeSpecialTags(args.slice(1).join(' '))
