@@ -14,6 +14,7 @@ export const createSubmission = async (client, channel, event) => {
     // Create a ticket for the submission
     const props = {
         id: newSubmission.id,
+        isDuplicate: await newSubmission.isDuplicate(),
         status: 'waiting',
         text: event.text
     }

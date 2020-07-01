@@ -155,6 +155,7 @@ If you still want to read it, click on *View thread*.`
         // Update the review message
         const props = {
             id,
+            isDuplicate: await submission.isDuplicate(),
             isSensitive: false,
             status: 'waiting',
             text: submission.body
@@ -195,6 +196,7 @@ If you still want to read it, click on *View thread*.`
         // Update the review message
         const props = {
             id: postId,
+            isDuplicate: await submission.isDuplicate(),
             isSensitive: true,
             status: 'waiting',
             text: submission.body,

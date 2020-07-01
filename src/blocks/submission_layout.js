@@ -2,6 +2,7 @@ import { removeSpecialTags } from '../utils'
 
 export const SubmissionLayout = ({
     id,
+    isDuplicate = false,
     isSensitive,
     postChannel,
     postNumber,
@@ -33,6 +34,20 @@ export const SubmissionLayout = ({
         },
         ...status === 'waiting'
             ? [
+                ...isDuplicate || isSensitive
+                    ? [{
+                        type: 'divider'
+                    }]
+                    : [],
+                ...isDuplicate
+                    ? [{
+                        type: 'section',
+                        text: {
+                            type: 'mrkdwn',
+                            text: ':grey_exclamation: _An identical submission has been approved before._'
+                        }
+                    }]
+                    : [],
                 ...isSensitive
                     ? [{
                         type: 'section',

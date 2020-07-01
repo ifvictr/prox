@@ -34,4 +34,11 @@ const PostSchema = new mongoose.Schema({
 
 PostSchema.plugin(mongooseDelete, { deletedAt: true })
 
+PostSchema.methods.isDuplicate = function () {
+    return mongoose.model('Post').exists({
+        body: this.body,
+        approvedAt: { $ne: null }
+    })
+}
+
 export default mongoose.model('Post', PostSchema)
