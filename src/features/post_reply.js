@@ -1,6 +1,6 @@
 import { ReplyModal } from '../blocks'
 import config from '../config'
-import { channelType, threaded } from '../middlewares'
+import { channelType, noBotUsers, threaded } from '../middlewares'
 import Post from '../models/post'
 import Pseudonym from '../models/pseudonym'
 import { generatePseudonymSet, getIcon, hash, removeSpecialTags } from '../utils'
@@ -92,7 +92,7 @@ export default app => {
     // Match anonymous replies sent via DMs
     // Matches "1337: hello" and "#1337: hello"
     const replyPattern = /^(#*)\d+:(\s|$)/
-    app.message(channelType('im'), threaded(false), replyPattern, async ({ client, event, say }) => {
+    app.message(channelType('im'), threaded(false), noBotUsers, replyPattern, async ({ client, event, say }) => {
         if ('attachments' in event || 'files' in event) {
             await say(':confused: Replies with files and attachments aren’t supported.')
             return

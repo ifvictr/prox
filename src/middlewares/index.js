@@ -12,4 +12,6 @@ export const channelType = type => filterEvent(event => event.channel_type === t
 
 export const noBotMessages = filterEvent(event => !('subtype' in event) || event.subtype !== 'bot_message')
 
+export const noBotUsers = filterEvent(event => !('bot_id' in event))
+
 export const threaded = (shouldBeThreaded = true) => filterEvent(event => 'thread_ts' in event === shouldBeThreaded)

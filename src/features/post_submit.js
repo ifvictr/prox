@@ -1,11 +1,11 @@
 import config from '../config'
-import { channelType, noBotMessages, threaded } from '../middlewares'
+import { channelType, noBotMessages, noBotUsers, threaded } from '../middlewares'
 import { createSubmission } from '../utils/slack'
 
 export default app => {
     // Match non-command and non-reply DMs
     const messagePattern = /^(?!\/)(?!(#*)\d+:(\s|$))/
-    app.message(channelType('im'), threaded(false), noBotMessages, messagePattern, async ({ client, event, say }) => {
+    app.message(channelType('im'), threaded(false), noBotUsers, noBotMessages, messagePattern, async ({ client, event, say }) => {
         if ('attachments' in event || 'files' in event) {
             await say(':confused: Submissions with files and attachments aren’t supported.')
             return
