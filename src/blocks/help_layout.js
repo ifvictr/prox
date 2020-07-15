@@ -21,8 +21,8 @@ export const HelpLayout = ({
         text: {
             type: 'mrkdwn',
             text: `:zap: *Shortcuts*\n
-- *Add anonymous reactions:* Send reactions to a message under a post. Only works if you created it.
-- *Send anonymous reply:* Send a reply to a post without having to switch to DM.\n
+• *Add anonymous reactions:* Send reactions to a message under a post. Only works if you created it.
+• *Send anonymous reply:* Send a reply to a post without having to switch to DM.\n
 All shortcuts can be found under *More actions* → *More message shortcuts*.
             `
         }
@@ -38,10 +38,10 @@ All shortcuts can be found under *More actions* → *More message shortcuts*.
                     type: 'mrkdwn',
                     text: `:mag: *Reviewer Tools*\n
 Here’s a list of available commands along with their parameters:\n
-- *\`${command} delete <post number|url> [hard]\`:* Deletes the specified post or reply comment from the post channel by replacing the message contents. If \`hard\` is specified, the message will be completely deleted.
-- *\`${command} lock <post number>\`:* Locks the specified post.
-- *\`${command} unlock <post number>\`:* Unlocks the specified post.
-- *\`${command} version\`:* See Prox’s version number.
+• *\`${command} delete <post number|url> [hard]\`:* Deletes the specified post or reply comment from the post channel by replacing the message contents. If \`hard\` is specified, the message will be completely deleted.
+• *\`${command} lock <post number>\`:* Locks the specified post.
+• *\`${command} unlock <post number>\`:* Unlocks the specified post.
+• *\`${command} version\`:* See Prox’s version number.
                     `
                 }
             }
