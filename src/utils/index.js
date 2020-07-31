@@ -44,4 +44,4 @@ export const pickRandom = arr => arr[Math.floor(Math.random() * arr.length)]
 export const removeSpecialTags = str =>
   str
     .replace(/@(channel|everyone|here)/gi, '@\u200c$1')
-    .replace(/\<\!(channel|everyone|here)\|(.*?)\>/gi, '<\u200c!$1|$2>')
+    .replace(/<!(channel|everyone|here)\|(.*?)>/gi, '<\u200c!$1|$2>')
