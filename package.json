@@ -22,6 +22,7 @@
     "clean": "rm -rf ./build && mkdir ./build",
     "dev": "nodemon -r ./node_modules/dotenv/config --exec babel-node ./src/index.js",
     "format": "prettier './src/**/*.js' --write",
+    "lint": "eslint './src/**/*.js'",
     "start": "yarn build && node ./build/index.js"
   },
   "dependencies": {
