@@ -1,0 +1,28 @@
+{
+  "name": "Prox",
+  "description": "Share anonymous confessions on Slack",
+  "logo": "https://files.ifvictr.com/2020/04/prox.png",
+  "repository": "https://github.com/ifvictr/prox",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "SLACK_BOT_TOKEN": {
+      "description": "Bot user’s OAuth access token. Usually starts with `xoxb-`."
+    },
+    "SLACK_SIGNING_SECRET": {
+      "description": "Signing secret from Slack used to confirm source of incoming messages."
+    },
+    "SLACK_POST_CHANNEL_ID": {
+      "description": "Channel where approved posts should be posted."
+    },
+    "SLACK_REVIEW_CHANNEL_ID": {
+      "description": "Channel where submissions should be sent for review."
+    },
+    "SLACK_STREAM_CHANNEL_ID": {
+      "description": "Channel where events should be logged."
+    }
+  }
+}
