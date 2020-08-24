@@ -6,6 +6,11 @@
     <i>Share anonymous confessions in Slack.</i>
 </p>
 
+<p align="center">
+    <img alt="Prox DM example" width="1000" src="https://files.ifvictr.com/2020/08/prox_dm.png" />
+    <img alt="Prox submission review channel example" width="600" src="https://files.ifvictr.com/2020/08/prox_review.png" />
+</p>
+
 ## Deploy
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
