@@ -69,7 +69,7 @@ export default async ({ client, command, respond }, args) => {
       await sendMessage(
         client,
         config.streamChannelId,
-        `_<@${command.user_id}> deleted *#${post.postNumber}*._`
+        `_<@${command.user_name}> deleted *#${post.postNumber}*._`
       )
     }
 
