@@ -71,7 +71,7 @@ export default async ({ client, command, respond }, args) => {
     message_ts: post.postMessageId
   })
   await sendMessage(client, config.streamChannelId, {
-    text: `_${command.user_name} locked <${postPermalink}|*#${post.postNumber}*>._`,
+    text: `_${command.user_name}(${command.user_id}) locked <${postPermalink}|*#${post.postNumber}*>._`,
     unfurl_links: false
   })
 }
