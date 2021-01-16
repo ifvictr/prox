@@ -68,6 +68,8 @@ For Prox to work, you’ll need to [register a Slack app](https://api.slack.com/
 
 For the **Request URL** under the **Interactivity** section, enter `http://<YOUR DOMAIN HERE>/slack/events`. This will be used for the app’s buttons.
 
+To create a shortcut for sending anonymous replies, click **Create New Shortcut** under the **Shortcuts** section. The shortcut should appear **On messages**. Fill out the **Name** (e.g. Send anonymous reply) and **Description** (e.g. Reply to a post anonymously) fields. Enter `reply_send` in the **Callback ID** field.
+
 #### Slash Commands
 
 The following commands are needed. Enter the same request URL you used in the previous section.
@@ -80,6 +82,7 @@ Install the Slack app to your Slack workspace first.
 
 The following bot token scopes are required:
 
+- `channels:history`: Used for the 'Send anonymous reply' shortcut.
 - `channels:read`: Used for logging movement events.
 - `chat:write`: Used for sending messages.
 - `chat:write.customize`: Used for sending anonymous replies with pseudonyms and icons that distinguish different repliers.
