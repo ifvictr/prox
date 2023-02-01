@@ -28,7 +28,7 @@
   "dependencies": {
     "@slack/bolt": "^2.1.1",
     "is-url": "^1.2.4",
-    "mongoose": "^5.9.20",
+    "mongoose": "^5.13.15",
     "mongoose-delete": "^0.5.2"
   },
   "devDependencies": {
